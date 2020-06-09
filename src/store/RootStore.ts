@@ -1,6 +1,6 @@
 import { observable, action } from 'mobx';
 
-type IRootStore = {
+interface IRootStore {
   drawingControls: {
     mode: string;
     strokeWidth: number;
@@ -56,4 +56,5 @@ class RootStore implements IRootStore {
   };
 }
 
-export const rootStore = new RootStore();
+const rootStore = new RootStore();
+export default rootStore;

@@ -1,25 +1,22 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Form, Field } from 'react-final-form';
-import { observer } from 'mobx-react';
 import { useStores } from 'hooks/useStores';
+import { observer } from 'mobx-react';
 import socket from 'api/api';
 
 import Message from 'components/Chat/Message';
 import Input from 'components/Input/Input';
 
 import * as Styled from './ChatStyles';
+import Form from '../Form/Form';
 
-export type ChatProps = {
-  roomNo: string;
-};
+export type ChatProps = {};
 
-const Chat: React.FC<ChatProps> = observer(({ roomNo }) => {
+const Chat: React.FC<ChatProps> = observer((props) => {
   const {
-    playersStore: {
-      localPlayer: { id: localPlayerId, name },
+    playerStore: {
+      localPlayer: { id: localPlayerId, name, roomNo },
     },
   } = useStores();
-
   const messagesContainer = useRef();
   const [messages, setMessages] = useState([]);
 
@@ -32,6 +29,7 @@ const Chat: React.FC<ChatProps> = observer(({ roomNo }) => {
       const { current: msgsCont } = messagesContainer;
 
       setMessages([...messages, message]);
+
       // @ts-ignore
       msgsCont.scrollTo(0, msgsCont.scrollHeight);
     });
@@ -39,8 +37,10 @@ const Chat: React.FC<ChatProps> = observer(({ roomNo }) => {
     return () => socket.removeAllListeners('msgFromServer');
   }, [messages, localPlayerId]);
 
-  const sendMessage = ({ message }, actions) => {
-    if (message) socket.emit('msgFromClient', { message }, () => actions.change('message', ''));
+  const sendMessage = (data) => {
+    const { message } = data;
+
+    message && socket.emit('msgFromClient', { message, roomNo }, () => {});
   };
 
   return (
@@ -53,21 +53,9 @@ const Chat: React.FC<ChatProps> = observer(({ roomNo }) => {
         })}
       </Styled.MessagesContainer>
       <Styled.InputContainer>
-        <Form
-          onSubmit={sendMessage}
-          initialValues={{
-            message: '',
-          }}
-          render={({ handleSubmit }) => (
-            <form onSubmit={handleSubmit}>
-              <Field name="message">
-                {({ input: { ...props } }) => (
-                  <Input {...props} placeholder="Type your message here..." autoComplete="off" />
-                )}
-              </Field>
-            </form>
-          )}
-        />
+        <Form onSubmit={sendMessage} resetOnSubmit>
+          <Input name="message" placeholder="Type your message here..." autoComplete="off" />
+        </Form>
       </Styled.InputContainer>
     </Styled.Wrapper>
   );

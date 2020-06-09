@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Redirect } from 'react-router-dom';
 import { parse } from 'query-string';
 import { observer } from 'mobx-react';
 import { useStores } from 'hooks/useStores';
@@ -12,10 +12,20 @@ import Chat from 'components/Chat/Chat';
 
 import * as Styled from './RoomViewStyles';
 
-const RoomView: React.FC = observer(() => {
+const RoomView = observer(() => {
   const {
-    playersStore: { localPlayer, setLocalPlayer },
+    playerStore: {
+      localPlayer,
+      localPlayer: { id: localPlayerId, roomNo: roomNumber, name: localPlayerName },
+      setLocalPlayer,
+    },
+    roomStore: {
+      drawingPlayerId,
+      currRound: { isOn },
+    },
   } = useStores();
+
+  const isDrawing = localPlayerId === drawingPlayerId;
 
   const {
     location: { search },
@@ -24,27 +34,28 @@ const RoomView: React.FC = observer(() => {
   const flipChart = useRef(null);
 
   useEffect(() => {
-    socket.emit(
-      'join',
-      {
-        name: parse(search).name,
-        room: parse(search).id,
-      },
-      (id) => {
-        setLocalPlayer({
-          id,
-          name: parse(search).name,
-          avatar: 'http://placebeard.it/300/300',
-          score: 151,
-        });
-      }
-    );
+    if (socket) {
+      const { id: roomNo } = parse(search);
 
-    return () => {
-      socket.emit('disconnect');
-      socket.off();
-    };
-  }, [setLocalPlayer, search]);
+      console.log(roomNumber);
+
+      socket.emit(
+        'joinRoom',
+        {
+          name: localPlayerName,
+          roomNo,
+        },
+        ({ player, error }) => {
+          error && console.log(new Error(error));
+        }
+      );
+
+      return () => {
+        socket.emit('disconnect', { localPlayer });
+        // socket.off();
+      };
+    }
+  }, [setLocalPlayer, localPlayerName, localPlayer, roomNumber, search]);
 
   const clearFlipChart = () => {
     flipChart.current.clearAll();
@@ -52,26 +63,26 @@ const RoomView: React.FC = observer(() => {
 
   return (
     <Styled.Wrapper>
-      <TopBar />
-      {localPlayer ? (
-        <Styled.Grid>
-          <Styled.FlipChartWrapper>
-            <Styled.CardFlipChart corners="10px 20px 20px 10px">
-              <FlipChart ref={flipChart} />
-            </Styled.CardFlipChart>
-          </Styled.FlipChartWrapper>
+      {localPlayerId ? (
+        <>
+          <TopBar />
+          <Styled.Grid>
+            <Styled.FlipChartWrapper>
+              <Styled.CardFlipChart corners="10px 20px 20px 10px">
+                {socket && isOn && <FlipChart ref={flipChart} />}
+              </Styled.CardFlipChart>
+            </Styled.FlipChartWrapper>
 
-          <Styled.SideElementsWrapper>
-            <Styled.CardChat corners="20px 10px 20px 20px">
-              {socket && <Chat roomNo={`${parse(search).id}`} />}
-            </Styled.CardChat>
-            <Styled.CardControls corners="20px 20px 10px 20px">
-              <DrawingControls onClear={clearFlipChart} />
-            </Styled.CardControls>
-          </Styled.SideElementsWrapper>
-        </Styled.Grid>
+            <Styled.SideElementsWrapper>
+              <Styled.CardChat corners="20px 10px 20px 20px">{socket && <Chat />}</Styled.CardChat>
+              <Styled.CardControls corners="20px 20px 10px 20px">
+                {isDrawing && isOn && <DrawingControls onClear={clearFlipChart} />}
+              </Styled.CardControls>
+            </Styled.SideElementsWrapper>
+          </Styled.Grid>
+        </>
       ) : (
-        <h1>No player</h1>
+        <Redirect to="/" />
       )}
     </Styled.Wrapper>
   );

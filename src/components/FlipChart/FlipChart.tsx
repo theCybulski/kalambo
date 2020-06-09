@@ -7,16 +7,14 @@ import React, {
   useMemo,
 } from 'react';
 import { Image, Layer, Stage } from 'react-konva';
-
+import socket from 'api/api';
 import { useStores } from 'hooks/useStores';
 
 import * as Styled from './FlipChartStyles';
 
-export type FlipChartTypes = {
-  ref: any;
-};
+export type FlipChartTypes = {};
 
-const FlipChart: React.FC<FlipChartTypes> = forwardRef((props, ref) => {
+const FlipChart = forwardRef<FlipChartTypes>(({ ...props }, ref) => {
   useImperativeHandle(ref, () => ({
     clearAll() {
       if (ctx) {
@@ -31,6 +29,10 @@ const FlipChart: React.FC<FlipChartTypes> = forwardRef((props, ref) => {
     rootStore: {
       drawingControls: { mode, strokeWidth, strokeColor },
     },
+    playerStore: {
+      localPlayer: { roomNo, id: localPlayerId },
+    },
+    roomStore: { drawingPlayerId },
   } = useStores();
 
   const stageWrapper = useRef(null);
@@ -49,6 +51,7 @@ const FlipChart: React.FC<FlipChartTypes> = forwardRef((props, ref) => {
   const [isDrawing, setIsDrawing] = useState(false);
   const [lastPointerPos, setLastPointerPos] = useState({ x: 0, y: 0 });
   const [previewInterval, setPreviewInterval] = useState(null);
+  const isDrawingPlayer = localPlayerId === drawingPlayerId;
 
   const canvas = useMemo(() => {
     const { width, height } = flipChartSize;
@@ -91,24 +94,36 @@ const FlipChart: React.FC<FlipChartTypes> = forwardRef((props, ref) => {
   }, [canvas, strokeColor, strokeWidth, mode]);
 
   useEffect(() => {
-    const setSize = () => {
-      const { clientWidth, clientHeight } = stageWrapper.current;
+    if (isDrawingPlayer) {
+      const setSize = () => {
+        const { clientWidth, clientHeight } = stageWrapper.current;
 
-      setFlipChartSize({
-        width: clientWidth,
-        height: clientHeight,
-      });
-    };
+        setFlipChartSize({
+          width: clientWidth,
+          height: clientHeight,
+        });
+      };
 
-    setSize();
-    window.addEventListener('resize', setSize);
+      setSize();
+      window.addEventListener('resize', setSize);
 
-    return () => window.removeEventListener('resize', setSize);
+      return () => window.removeEventListener('resize', setSize);
+    }
+  }, [isDrawingPlayer]);
+
+  useEffect(() => {
+    socket.on('broadcastPreviewData', ({ data }) => {
+      console.log('preview data');
+      setPreview(data);
+    });
+
+    return () => socket.removeAllListeners('broadcastPreviewData');
   }, []);
 
   const handleSetPreview = () => {
     console.log('emitting...');
-    setPreview(canvas.toDataURL());
+
+    socket.emit('emitPreviewData', { data: canvas.toDataURL(), roomNo }, () => {});
   };
 
   const handleBrushDown = () => {
@@ -154,10 +169,10 @@ const FlipChart: React.FC<FlipChartTypes> = forwardRef((props, ref) => {
   const handleBrushUp = () => {
     console.log('brush up');
 
+    handleSetPreview();
     setIsDrawing(false);
     clearInterval(previewInterval);
     setPreviewInterval(null);
-    handleSetPreview();
   };
 
   const handleDrawing = () => {
@@ -169,28 +184,31 @@ const FlipChart: React.FC<FlipChartTypes> = forwardRef((props, ref) => {
 
   return (
     <>
-      {preview && (
-        <Styled.PreviewWrapper>
-          <Styled.Preview src={preview} alt="preview" />
-        </Styled.PreviewWrapper>
+      {isDrawingPlayer ? (
+        <Styled.StageWrapper ref={stageWrapper}>
+          <Stage ref={stage} width={flipChartSize.width} height={flipChartSize.height}>
+            <Layer ref={layer}>
+              <Image
+                image={canvas}
+                ref={image}
+                onMouseDown={handleBrushDown}
+                onTouchStart={handleBrushDown}
+                onMouseUp={handleBrushUp}
+                onTouchEnd={handleBrushUp}
+                onMouseMove={handleDrawing}
+                onTouchMove={handleDrawing}
+                onMouseLeave={handleBrushUp}
+              />
+            </Layer>
+          </Stage>
+        </Styled.StageWrapper>
+      ) : (
+        preview && (
+          <Styled.PreviewWrapper>
+            <Styled.Preview src={preview} alt="preview" />
+          </Styled.PreviewWrapper>
+        )
       )}
-      <Styled.StageWrapper ref={stageWrapper}>
-        <Stage ref={stage} width={flipChartSize.width} height={flipChartSize.height}>
-          <Layer ref={layer}>
-            <Image
-              image={canvas}
-              ref={image}
-              onMouseDown={handleBrushDown}
-              onTouchStart={handleBrushDown}
-              onMouseUp={handleBrushUp}
-              onTouchEnd={handleBrushUp}
-              onMouseMove={handleDrawing}
-              onTouchMove={handleDrawing}
-              onMouseLeave={handleBrushUp}
-            />
-          </Layer>
-        </Stage>
-      </Styled.StageWrapper>
     </>
   );
 });

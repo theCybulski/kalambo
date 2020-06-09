@@ -29,6 +29,9 @@ const DrawingControls = observer(({ onClear }) => {
       setToolSize,
       setStrokeColor,
     },
+    roomStore: {
+      currRound: { keyWord },
+    },
   } = useStores();
 
   const handleChangeComplete = (color) => {
@@ -57,7 +60,7 @@ const DrawingControls = observer(({ onClear }) => {
 
   return (
     <Styled.Wrapper>
-      <Styled.KeyWordWrapper>Draw: Kobra</Styled.KeyWordWrapper>
+      <Styled.KeyWordWrapper>Draw: {keyWord}</Styled.KeyWordWrapper>
       <Styled.Row>
         <Styled.Column>
           <Styled.InputWrapper>

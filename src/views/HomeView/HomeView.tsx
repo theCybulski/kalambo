@@ -1,14 +1,21 @@
 import React from 'react';
-import 'mobx-react-lite/batchingForReactDom';
 import { observer } from 'mobx-react';
+import CreateRoomForm from 'components/views/HomeView/CreateRoomForm';
+
+import * as Styled from './HomeViewStyles';
+import JoinRoomForm from 'components/views/HomeView/JoinRoomForm';
 
 const HomeView: React.FC = observer(() => {
-  const viewName = 'Home view';
-
   return (
-    <div>
-      <h1>{viewName}</h1>
-    </div>
+    <Styled.Wrapper>
+      <Styled.FormsWrapper>
+        <CreateRoomForm />
+        <br />
+        <br />
+        <br />
+        <JoinRoomForm />
+      </Styled.FormsWrapper>
+    </Styled.Wrapper>
   );
 });
 

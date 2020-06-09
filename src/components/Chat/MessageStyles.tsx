@@ -31,7 +31,7 @@ export const MessageWrapper = styled.div`
 `;
 
 export const Message = styled.div`
-  ${({ theme }) => css`
+  ${({ theme, isLocalPlayer, isCorrect }) => css`
     font-size: ${theme.fonts.size.regular};
     font-weight: ${theme.fonts.weight.light};
     line-height: 1.3em;
@@ -41,15 +41,20 @@ export const Message = styled.div`
     max-width: 75%;
     display: inline-block;
     border-radius: 20px 20px 20px 10px;
-  `};
 
-  ${({ theme, isLocalPlayer }) =>
-    isLocalPlayer &&
+    ${isLocalPlayer &&
     css`
       background-color: rgba(${theme.colors.primaryColor}, 1);
       color: rgba(${theme.colors.primaryFill}, 1);
       border-radius: 20px 20px 10px 20px;
-    `};
+    `}
+
+    ${isCorrect &&
+    css`
+      color: #fff;
+      background-color: rgba(${theme.colors.secondaryColor}, 1);
+    `}
+  `};
 `;
 
 export const Sender = styled.div`

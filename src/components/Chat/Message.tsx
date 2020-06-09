@@ -4,7 +4,7 @@ import * as Styled from './MessageStyles';
 
 export type MessageProps = {
   timestamp: string;
-  senderName: string;
+  player: string;
   avatar: string;
   message: string;
   isCorrect: boolean;
@@ -13,13 +13,12 @@ export type MessageProps = {
 
 const Message: React.FC<MessageProps> = ({
   timestamp,
-  senderName,
+  player,
   avatar,
   message,
   isCorrect,
   isLocalPlayer,
 }) => {
-
   return (
     <Styled.Wrapper>
       {avatar && (
@@ -29,8 +28,10 @@ const Message: React.FC<MessageProps> = ({
       )}
 
       <Styled.MessageWrapper alignRight={isLocalPlayer}>
-        {senderName && <Styled.Sender>{senderName}</Styled.Sender>}
-        <Styled.Message isCorrect={isCorrect} isLocalPlayer={isLocalPlayer}>{message}</Styled.Message>
+        {player && !isLocalPlayer && <Styled.Sender>{player}</Styled.Sender>}
+        <Styled.Message isCorrect={isCorrect} isLocalPlayer={isLocalPlayer}>
+          {message}
+        </Styled.Message>
       </Styled.MessageWrapper>
     </Styled.Wrapper>
   );

@@ -1,12 +1,20 @@
-const setApiEndpoint = () => {
-    if (process.env.NODE_ENV === 'development') {
-        // Running locally
-        return 'http://192.168.0.14:4000';
-    }
-    if (process.env.NODE_ENV === 'production') {
-        // TODO: change after establishing production server
-        return 'http://thecybulski.com';
-    }
+const apiBaseEndpoint = () => {
+  if (process.env.NODE_ENV === 'development') {
+    return 'http://localhost:4000';
+  }
+  if (process.env.NODE_ENV === 'production') {
+    return 'https://kalambury-be.herokuapp.com';
+  }
 };
 
-export const API_BASE_ENDPOINT = setApiEndpoint();
+const appBaseUrl = () => {
+  if (process.env.NODE_ENV === 'development') {
+    return 'localhost:3000';
+  }
+  if (process.env.NODE_ENV === 'production') {
+    return 'https://kalambury-be.herokuapp.com';
+  }
+};
+
+export const API_BASE_ENDPOINT = apiBaseEndpoint();
+export const APP_BASE_URL = appBaseUrl();
