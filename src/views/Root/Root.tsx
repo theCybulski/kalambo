@@ -19,10 +19,10 @@ const Root: React.FC = () => {
   return (
     <Provider {...{ playerStore, roomStore, rootStore }}>
       <ThemeProvider theme={{ ...defaultTheme, ...lightTheme }}>
-        <GlobalStyles />
         <Router history={history}>
           <RootRouter />
         </Router>
+        <GlobalStyles />
       </ThemeProvider>
     </Provider>
   );
