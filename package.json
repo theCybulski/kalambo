@@ -29,6 +29,10 @@
     "styled-reset": "^4.1.4",
     "typescript": "^3.7.5"
   },
+  "engines": {
+    "node": "12.1.0",
+    "npm": "6.9.0"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
