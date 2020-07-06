@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ButtonIcon Renders properly with default props 1`] = `
+<ButtonIcon
+  icon="IconBrush.svg"
+  isActive={false}
+  onClick={[MockFunction]}
+>
+  <styled.button
+    onClick={[MockFunction]}
+  >
+    <button
+      className="sc-AxiKw fEooJD"
+      onClick={[MockFunction]}
+    >
+      <styled.div
+        icon="IconBrush.svg"
+        isActive={false}
+      >
+        <div
+          className="sc-AxjAm guzPJa"
+        />
+      </styled.div>
+    </button>
+  </styled.button>
+</ButtonIcon>
+`;

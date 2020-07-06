@@ -2,9 +2,9 @@ import React, { ButtonHTMLAttributes } from 'react';
 
 import * as Styled from './ButtonStyles';
 
-export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
+export interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
 
-const Button: React.FC<ButtonProps> = ({ children, ...props }) => (
+const Button: React.FC<IButtonProps> = ({ children, ...props }) => (
   <Styled.Wrapper {...props}>{children}</Styled.Wrapper>
 );
 
