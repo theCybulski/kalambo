@@ -3,9 +3,9 @@ import { mount } from 'enzyme';
 import { Provider } from 'mobx-react';
 import { ThemeProvider } from 'styled-components';
 
-import playerStore from '__mocks__/store/PlayerStore';
-import roomStore from '__mocks__/store/RoomStore';
-import rootStore from '__mocks__/store/RootStore';
+import playerStore from 'store/__mocks__/PlayerStore';
+import roomStore from 'store/__mocks__/RoomStore';
+import rootStore from 'store/__mocks__/RootStore';
 
 import defaultTheme from 'shared/styles/defaultTheme';
 import lightTheme from 'shared/styles/lightTheme';

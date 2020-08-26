@@ -1,14 +1,19 @@
 import React from 'react';
-import { ReactWrapper } from 'enzyme';
 
-import { mountWithMockedStore, testTheme } from 'utils/testsUtils';
+import { mountWithMockedStore } from 'utils/tests/testsUtils';
 
 import Chat from './Chat';
 
-xdescribe(`${Chat.name}`, () => {
-  it('Renders properly', () => {
-    const wrapper = mountWithMockedStore(<Chat />);
+jest.mock('api/api');
 
-    console.log(wrapper.debug());
+describe(`${Chat.name}`, () => {
+  it('Renders properly with messages', async () => {
+    Element.prototype.scrollTo = () => {};
+    const wrapper = mountWithMockedStore(<Chat />);
+    const message = wrapper.find('Message').find('[data-test="message-content"]').at(0);
+    const msgInput = wrapper.find('input[name="message"]');
+
+    expect(message.text()).toBe('Some test message');
+    expect(msgInput.length).toBe(1);
   });
 });

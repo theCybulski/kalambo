@@ -1,6 +1,6 @@
 import React from 'react';
 import toJson from 'enzyme-to-json';
-import { mountWithTheme } from 'utils/testsUtils';
+import { mountWithTheme } from 'utils/tests/testsUtils';
 
 import Button from './Button';
 

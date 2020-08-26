@@ -1,7 +1,7 @@
 import React from 'react';
 import { ReactWrapper } from 'enzyme';
 
-import { mountWithTheme, testTheme } from 'utils/testsUtils';
+import { mountWithTheme, testTheme } from 'utils/tests/testsUtils';
 
 import Message, { MessageProps } from './Message';
 

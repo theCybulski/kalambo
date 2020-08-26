@@ -60,12 +60,10 @@ class RoomStore implements IRoomStore {
     });
 
     socket.on('updateRoomSettings', (payload) => {
-      console.log({ payload });
       this.setRoomSettings({ ...this.getRoomSettings(), ...payload });
     });
 
     socket.on('setDrawingPlayer', ({ drawingPlayerId }) => {
-      console.log(drawingPlayerId);
       this.drawingPlayerId = drawingPlayerId;
     });
   }

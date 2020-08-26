@@ -17,11 +17,11 @@ export interface IPlayerStore {
 
 class PlayerStore implements IPlayerStore {
   @observable localPlayer: playerType = {
-    id: null,
-    name: null,
-    avatar: null,
-    score: null,
-    roomNo: null,
+    id: 'test123',
+    name: 'Test player',
+    avatar: '',
+    score: '100',
+    roomNo: '321987',
     isReady: false,
   };
 
