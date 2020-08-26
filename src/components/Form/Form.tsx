@@ -5,7 +5,7 @@ export type FuncArguments<F> = F extends (...args: infer A) => any ? A : any;
 export type UseFormResult = ReturnType<typeof useForm>;
 export type OnSubmit = FuncArguments<UseFormResult['handleSubmit']>[0];
 
-interface FormProps {
+export interface FormProps {
   onSubmit: OnSubmit;
   resetOnSubmit?: boolean;
 }

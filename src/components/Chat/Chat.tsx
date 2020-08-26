@@ -28,14 +28,14 @@ const Chat: React.FC<ChatProps> = observer((props) => {
     socket.on('msgFromServer', (message) => {
       const { current: msgsCont } = messagesContainer;
 
-      setMessages([...messages, message]);
+      setMessages((prevState) => [...prevState, message]);
 
       // @ts-ignore
       msgsCont.scrollTo(0, msgsCont.scrollHeight);
     });
 
     return () => socket.removeAllListeners('msgFromServer');
-  }, [messages, localPlayerId]);
+  }, []);
 
   const sendMessage = (data) => {
     const { message } = data;

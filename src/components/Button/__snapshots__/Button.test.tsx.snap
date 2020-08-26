@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Button Renders properly with any props 1`] = `
+.c0 {
+  position: relative;
+  background-color: rgba(113,31,218,1);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 15px;
+  cursor: pointer;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+<ThemeProvider
+  theme={
+    Object {
+      "colors": Object {
+        "additional": "50,50,50",
+        "primaryColor": "113,31,218",
+        "primaryFill": "255,255,255",
+        "secondaryColor": "255,90,19",
+        "secondaryFill": "249,248,253",
+      },
+      "deviceWidth": Object {
+        "desktop": 1400,
+        "desktopBig": 2000,
+        "desktopSmall": 1260,
+        "phone": 690,
+        "phoneSmall": 370,
+        "tablet": 1000,
+      },
+      "fonts": Object {
+        "size": Object {
+          "medium": "20px",
+          "regular": "16px",
+          "small": "12px",
+        },
+        "weight": Object {
+          "bold": "700",
+          "light": "300",
+          "regular": "400",
+        },
+      },
+      "shadows": Object {
+        "primary": "0 10px 30px 0 rgba(84,37,201,0.06);",
+      },
+    }
+  }
+>
+  <Button
+    type="submit"
+  >
+    <styled.button
+      type="submit"
+    >
+      <button
+        className="c0"
+        type="submit"
+      >
+        Test button
+      </button>
+    </styled.button>
+  </Button>
+</ThemeProvider>
+`;

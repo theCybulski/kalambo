@@ -3,16 +3,15 @@ import React from 'react';
 import * as Styled from './MessageStyles';
 
 export type MessageProps = {
-  timestamp: string;
+  timestamp?: string;
   player: string;
-  avatar: string;
+  avatar?: string | null;
   message: string;
   isCorrect: boolean;
-  isLocalPlayer?: boolean;
+  isLocalPlayer: boolean;
 };
 
 const Message: React.FC<MessageProps> = ({
-  timestamp,
   player,
   avatar,
   message,
@@ -22,14 +21,14 @@ const Message: React.FC<MessageProps> = ({
   return (
     <Styled.Wrapper>
       {avatar && (
-        <Styled.AvatarWrapper>
+        <Styled.AvatarWrapper data-test="message-avatar">
           <Styled.Avatar src={avatar} />
         </Styled.AvatarWrapper>
       )}
 
-      <Styled.MessageWrapper alignRight={isLocalPlayer}>
-        {player && !isLocalPlayer && <Styled.Sender>{player}</Styled.Sender>}
-        <Styled.Message isCorrect={isCorrect} isLocalPlayer={isLocalPlayer}>
+      <Styled.MessageWrapper alignRight={isLocalPlayer} data-test="message-wrapper">
+        {player && !isLocalPlayer && <Styled.Sender data-test="message-sender">{player}</Styled.Sender>}
+        <Styled.Message isCorrect={isCorrect} isLocalPlayer={isLocalPlayer} data-test="message-content">
           {message}
         </Styled.Message>
       </Styled.MessageWrapper>
