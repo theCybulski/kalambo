@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 
 export const H = styled.div`
-  ${({ variant, theme }) => css`
+  ${() => css`
     align-items: center;
     font-weight: normal;
     margin-bottom: 1em;

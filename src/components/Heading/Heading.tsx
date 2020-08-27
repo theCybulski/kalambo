@@ -36,7 +36,7 @@ const Heading: React.FC<HeadingProps> = ({ as, children, ...rest }) => {
     }
   };
 
-  return <Styled.H variant={as}>{renderHeading()}</Styled.H>;
+  return <Styled.H>{renderHeading()}</Styled.H>;
 };
 
 export default Heading;
