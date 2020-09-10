@@ -1,6 +1,5 @@
-import React from 'react';
-
 import { IPlayerStore, PlayerStore } from "./PlayerStore";
+import { mockedPlayer } from "./__mocks__/models";
 
 describe('PlayerStore', () => {
   let store: IPlayerStore;
@@ -19,14 +18,7 @@ describe('PlayerStore', () => {
   })
 
   it('Sets local player', () => {
-    store.setLocalPlayer({
-      id: '123',
-      name: 'Test player',
-      avatar: '',
-      score: '999',
-      roomNo: 'test room',
-      isReady: true
-    })
+    store.setLocalPlayer(mockedPlayer)
 
     expect(store.localPlayer.id).toBe('123');
     expect(store.localPlayer.name).toBe('Test player');

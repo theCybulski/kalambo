@@ -27,6 +27,20 @@ export interface IRoomStore {
     playerId: playerType['id'],
     roomNo: playerType['roomNo']
   ) => void;
+  getRoomSettings: () => {
+    roomNo: IRoomStore['roomNo'];
+    roomAdmin: IRoomStore['roomAdmin'];
+    drawingPlayerId: IRoomStore['drawingPlayerId'];
+    currRound: IRoomStore['currRound'];
+    players: IRoomStore['players'];
+  };
+  setRoomSettings: (settings: {
+    roomNo?: IRoomStore['roomNo'];
+    roomAdmin?: IRoomStore['roomAdmin'];
+    players?: IRoomStore['players'];
+    drawingPlayerId?: IRoomStore['drawingPlayerId'];
+    currRound?: IRoomStore['currRound'];
+  }) => void;
 }
 
 export class RoomStore implements IRoomStore {
@@ -52,7 +66,7 @@ export class RoomStore implements IRoomStore {
     socket.on('setRound', ({ isOn, roundNo, keyWord }) => {
       this.currRound.isOn = isOn;
       this.currRound.roundNo = roundNo;
-      this.currRound.keyWord = keyWord
+      this.currRound.keyWord = keyWord;
     });
 
     socket.on('readinessCheck', (payload) => {
@@ -115,12 +129,6 @@ export class RoomStore implements IRoomStore {
     players = this.players,
     drawingPlayerId = this.drawingPlayerId,
     currRound = this.currRound,
-  }: {
-    roomNo?: IRoomStore['roomNo'];
-    roomAdmin?: IRoomStore['roomAdmin'];
-    players?: IRoomStore['players'];
-    drawingPlayerId?: IRoomStore['drawingPlayerId'];
-    currRound?: IRoomStore['currRound'];
   }) {
     this.roomNo = roomNo;
     this.roomAdmin = roomAdmin;
