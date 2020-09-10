@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import * as Styled from './TopBarStyles';
 import { useStores } from 'hooks/useStores';
@@ -32,7 +32,7 @@ const TopBar: React.FC<TopBarProps> = observer(() => {
   }, [timer]);
 
   const adminName = useMemo(() => {
-    const name = players.find((player) => player.id === roomAdmin).name;
+    const name = players?.find((player) => player.id === roomAdmin)?.name;
 
     return name;
   }, [roomAdmin, players]);
@@ -41,6 +41,10 @@ const TopBar: React.FC<TopBarProps> = observer(() => {
     socket.emit('startRound', { roomNo });
     setPlayerReady(false);
   };
+
+  const handleSetPlayerReady = useCallback(() => {
+    setPlayerReady(!isReady);
+  }, [isReady]);
 
   return (
     <Styled.Wrapper>
@@ -59,7 +63,7 @@ const TopBar: React.FC<TopBarProps> = observer(() => {
               Start Round
             </button>
             <br />
-            <button onClick={() => setPlayerReady(!isReady)}>
+            <button onClick={handleSetPlayerReady} data-test-id="btn-ready">
               {isReady ? 'Not ready' : 'Ready'}
             </button>
           </div>

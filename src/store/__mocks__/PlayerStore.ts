@@ -33,6 +33,7 @@ class PlayerStore implements IPlayerStore {
 
   @action.bound
   setPlayerReady(isReady) {
+    console.warn(isReady)
     this.localPlayer.isReady = isReady;
     socket.emit('updatePlayer', { ...this.localPlayer }, () => {});
   }

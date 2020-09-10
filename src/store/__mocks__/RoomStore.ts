@@ -30,8 +30,8 @@ export interface IRoomStore {
 }
 
 class RoomStore implements IRoomStore {
-  @observable roomNo: IRoomStore['roomNo'] = null;
-  @observable roomAdmin: IRoomStore['roomAdmin'] = null;
+  @observable roomNo: IRoomStore['roomNo'] = '123321';
+  @observable roomAdmin: IRoomStore['roomAdmin'] = 'test123';
   @observable drawingPlayerId: IRoomStore['drawingPlayerId'] = null;
   @observable currRound: IRoomStore['currRound'] = {
     isOn: false,
@@ -41,7 +41,16 @@ class RoomStore implements IRoomStore {
     timer: null,
     keyWord: null,
   };
-  @observable players: IRoomStore['players'] = [];
+  @observable players: IRoomStore['players'] = [
+    {
+      id: 'test123',
+      name: 'Test player',
+      avatar: '',
+      score: '100',
+      roomNo: '321987',
+      isReady: false,
+    },
+  ];
   @observable isEverybodyReady: IRoomStore['isEverybodyReady'] = false;
 
   constructor() {
@@ -52,7 +61,7 @@ class RoomStore implements IRoomStore {
     socket.on('setRound', ({ isOn, roundNo, keyWord }) => {
       this.currRound.isOn = isOn;
       this.currRound.roundNo = roundNo;
-      this.currRound.keyWord = keyWord
+      this.currRound.keyWord = keyWord;
     });
 
     socket.on('readinessCheck', (payload) => {
