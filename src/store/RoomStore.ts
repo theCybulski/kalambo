@@ -29,7 +29,7 @@ export interface IRoomStore {
   ) => void;
 }
 
-class RoomStore implements IRoomStore {
+export class RoomStore implements IRoomStore {
   @observable roomNo: IRoomStore['roomNo'] = null;
   @observable roomAdmin: IRoomStore['roomAdmin'] = null;
   @observable drawingPlayerId: IRoomStore['drawingPlayerId'] = null;
@@ -136,6 +136,3 @@ class RoomStore implements IRoomStore {
     this.players = players;
   }
 }
-
-const roomStore = new RoomStore();
-export default roomStore;

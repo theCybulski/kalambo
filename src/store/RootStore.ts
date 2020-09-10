@@ -22,7 +22,7 @@ interface IRootStore {
   };
 }
 
-class RootStore implements IRootStore {
+export class RootStore implements IRootStore {
   @observable drawingControls = {
     mode: 'brush',
     strokeWidth: 5,
@@ -55,6 +55,3 @@ class RootStore implements IRootStore {
     this.drawingControls.strokeColor = color;
   };
 }
-
-const rootStore = new RootStore();
-export default rootStore;

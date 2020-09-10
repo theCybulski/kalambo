@@ -44,7 +44,7 @@ const TopBar: React.FC<TopBarProps> = observer(() => {
 
   const handleSetPlayerReady = useCallback(() => {
     setPlayerReady(!isReady);
-  }, [isReady]);
+  }, [isReady, setPlayerReady]);
 
   return (
     <Styled.Wrapper>

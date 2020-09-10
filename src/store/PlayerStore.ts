@@ -13,9 +13,10 @@ export type playerType = {
 export interface IPlayerStore {
   localPlayer: playerType;
   setLocalPlayer: (localPlayer: playerType) => void;
+  setPlayerReady: (isReady: boolean) => void;
 }
 
-class PlayerStore implements IPlayerStore {
+export class PlayerStore implements IPlayerStore {
   @observable localPlayer: playerType = {
     id: null,
     name: null,
@@ -37,6 +38,3 @@ class PlayerStore implements IPlayerStore {
     socket.emit('updatePlayer', { ...this.localPlayer }, () => {});
   }
 }
-
-const playerStore = new PlayerStore();
-export default playerStore;
