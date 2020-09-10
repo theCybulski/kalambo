@@ -1,9 +1,7 @@
 import { RoomStore, IRoomStore } from './RoomStore';
 import axios from 'axios';
 import { mockedPlayer } from './__mocks__/models';
-import { playerType } from './PlayerStore';
 import { API_BASE_ENDPOINT } from '../shared/config/config';
-import toJson from 'enzyme-to-json';
 
 jest.mock('axios', () => ({
   __esModule: true,

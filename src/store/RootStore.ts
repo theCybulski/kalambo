@@ -1,6 +1,6 @@
 import { observable, action } from 'mobx';
 
-interface IRootStore {
+export interface IRootStore {
   drawingControls: {
     mode: string;
     strokeWidth: number;
@@ -20,6 +20,9 @@ interface IRootStore {
       };
     };
   };
+  setTool: (tool: string) => void;
+  setToolSize: (size: number) => void;
+  setStrokeColor: (color: IRootStore['drawingControls']['strokeColor']) => void;
 }
 
 export class RootStore implements IRootStore {
