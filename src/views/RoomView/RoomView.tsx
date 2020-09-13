@@ -37,8 +37,6 @@ const RoomView = observer(() => {
     if (socket) {
       const { id: roomNo } = parse(search);
 
-      console.log(roomNumber);
-
       socket.emit(
         'joinRoom',
         {
