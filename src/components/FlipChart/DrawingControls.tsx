@@ -60,11 +60,13 @@ const DrawingControls = observer(({ onClear }) => {
 
   return (
     <Styled.Wrapper>
-      <Styled.KeyWordWrapper>Draw: {keyWord}</Styled.KeyWordWrapper>
+      <Styled.KeyWordWrapper>
+        Draw: <span data-cy="keyword">{keyWord}</span>
+      </Styled.KeyWordWrapper>
       <Styled.Row>
         <Styled.Column>
           <Styled.InputWrapper>
-            <Styled.InputValue>Tool size: {strokeWidth}px</Styled.InputValue>
+            <Styled.InputValue data-cy="tool-size">Tool size: {strokeWidth}px</Styled.InputValue>
             <Styled.SInput
               width="100%"
               type="range"
@@ -72,6 +74,7 @@ const DrawingControls = observer(({ onClear }) => {
               min="2"
               max="50"
               onChange={({ target }) => setToolSize(target.value)}
+              data-cy="input-tool-size"
             />
           </Styled.InputWrapper>
 
@@ -80,6 +83,7 @@ const DrawingControls = observer(({ onClear }) => {
             title="Use brush"
             onClick={() => setTool('brush')}
             isActive={mode === 'brush'}
+            data-cy="btn-brush"
           >
             Use brush
           </ButtonIcon>
@@ -89,11 +93,17 @@ const DrawingControls = observer(({ onClear }) => {
             title="Use eraser"
             onClick={() => setTool('eraser')}
             isActive={mode === 'eraser'}
+            data-cy="btn-eraser"
           >
             Use eraser
           </ButtonIcon>
 
-          <ButtonIcon icon={IconClear} title="Clear flipchart" onClick={onClear}>
+          <ButtonIcon
+            icon={IconClear}
+            title="Clear flipchart"
+            onClick={onClear}
+            data-cy="btn-clear"
+          >
             Clear all
           </ButtonIcon>
         </Styled.Column>

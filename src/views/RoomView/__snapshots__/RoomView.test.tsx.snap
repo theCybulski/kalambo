@@ -10,7 +10,7 @@ exports[`undefined Matches snapshot 1`] = `
     }
   }
 >
-  <ThemeProvider
+  <Component
     theme={
       Object {
         "colors": Object {
@@ -47,6 +47,6 @@ exports[`undefined Matches snapshot 1`] = `
     }
   >
     <Memo(wrappedComponent) />
-  </ThemeProvider>
+  </Component>
 </ContextProvider>
 `;

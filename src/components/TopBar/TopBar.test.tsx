@@ -8,17 +8,16 @@ import { act } from 'react-dom/test-utils';
 xdescribe(`${TopBar.name}`, () => {
   it('Sets player ready', async () => {
     const wrapper = mountWithMockedStore(<TopBar />);
-    const btnReady = wrapper.find('[data-test-id="btn-ready"]');
+    const btnReady = wrapper.find('[data-cy="btn-ready"]');
 
     expect(btnReady.text()).toBe('Ready');
 
     await act(async () => {
       btnReady.props().onClick;
-      // wrapper.find('MobXProvider').props().playerStore.setPlayerReady(true)
     });
 
     wrapper.update();
 
-    console.log(wrapper.find('[data-test-id="btn-ready"]').debug());
+    console.log(wrapper.find('[data-cy="btn-ready"]').debug());
   });
 });

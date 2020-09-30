@@ -11,24 +11,27 @@ export type MessageProps = {
   isLocalPlayer: boolean;
 };
 
-const Message: React.FC<MessageProps> = ({
-  player,
-  avatar,
-  message,
-  isCorrect,
-  isLocalPlayer,
-}) => {
+const Message: React.FC<MessageProps> = ({ player, avatar, message, isCorrect, isLocalPlayer }) => {
   return (
     <Styled.Wrapper>
       {avatar && (
-        <Styled.AvatarWrapper data-test="message-avatar">
+        <Styled.AvatarWrapper data-cy="message-avatar">
           <Styled.Avatar src={avatar} />
         </Styled.AvatarWrapper>
       )}
 
-      <Styled.MessageWrapper alignRight={isLocalPlayer} data-test="message-wrapper">
-        {player && !isLocalPlayer && <Styled.Sender data-test="message-sender">{player}</Styled.Sender>}
-        <Styled.Message isCorrect={isCorrect} isLocalPlayer={isLocalPlayer} data-test="message-content">
+      <Styled.MessageWrapper
+        alignRight={isLocalPlayer}
+        data-cy={`message-wrapper${isCorrect ? '-correct' : ''}`}
+      >
+        {player && !isLocalPlayer && (
+          <Styled.Sender data-cy="message-sender">{player}</Styled.Sender>
+        )}
+        <Styled.Message
+          isCorrect={isCorrect}
+          isLocalPlayer={isLocalPlayer}
+          data-cy={`message-content${isCorrect ? '-correct' : ''}`}
+        >
           {message}
         </Styled.Message>
       </Styled.MessageWrapper>

@@ -8,9 +8,10 @@ export type OnSubmit = FuncArguments<UseFormResult['handleSubmit']>[0];
 export interface FormProps {
   onSubmit: OnSubmit;
   resetOnSubmit?: boolean;
+  dataCy?: string;
 }
 
-const Form: React.FC<FormProps> = ({ children, onSubmit, resetOnSubmit }) => {
+const Form: React.FC<FormProps> = ({ children, onSubmit, resetOnSubmit, dataCy }) => {
   const formMethods = useForm();
   const { handleSubmit } = formMethods;
 
@@ -21,7 +22,9 @@ const Form: React.FC<FormProps> = ({ children, onSubmit, resetOnSubmit }) => {
 
   return (
     <FormContext {...formMethods}>
-      <form onSubmit={handleSubmit(submit)}>{children}</form>
+      <form onSubmit={handleSubmit(submit)} data-cy={dataCy}>
+        {children}
+      </form>
     </FormContext>
   );
 };

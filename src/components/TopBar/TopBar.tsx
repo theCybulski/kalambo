@@ -54,20 +54,20 @@ const TopBar: React.FC<TopBarProps> = observer(() => {
             Room: {roomNo}
             <span>Admin: {adminName}</span>
           </Styled.Info>
-          <Styled.Timer>{displayTimer}</Styled.Timer>
+          <Styled.Timer data-cy="round-timer">{displayTimer}</Styled.Timer>
         </Styled.InfoWrapper>
         <Styled.ControlsWrapper>
           <div>
             <h1>Controls</h1>
-            <button onClick={startRound} disabled={!isEverybodyReady || isOn}>
+            <button onClick={startRound} disabled={!isEverybodyReady || isOn} data-cy="btn-start-round">
               Start Round
             </button>
             <br />
-            <button onClick={handleSetPlayerReady} data-test-id="btn-ready">
+            <button onClick={handleSetPlayerReady} data-cy="btn-ready">
               {isReady ? 'Not ready' : 'Ready'}
             </button>
           </div>
-          <div>
+          <div data-cy="round-counter">
             Round #{roundNo} {isOn && '+'}
           </div>
         </Styled.ControlsWrapper>
