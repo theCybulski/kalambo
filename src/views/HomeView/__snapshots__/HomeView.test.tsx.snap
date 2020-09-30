@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`undefined Matches snapshot 1`] = `
+<styled.div>
+  <styled.div>
+    <Memo(wrappedComponent) />
+    <br />
+    <br />
+    <br />
+    <Memo(wrappedComponent) />
+  </styled.div>
+</styled.div>
+`;

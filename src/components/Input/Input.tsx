@@ -15,7 +15,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <Styled.Wrapper>
         <Styled.Input {...props} name={name} ref={register({ required: isRequired })} />
-        {errors[name] && <span>This field is required</span>}
+        {errors[name] && <span data-cy="input-error">This field is required</span>}
       </Styled.Wrapper>
     );
   }

@@ -8,10 +8,14 @@ import Message, { MessageProps } from './Message';
 const mountMessageWithProps = (props: MessageProps) => {
   const wrapper: ReactWrapper = mountWithTheme(<Message {...props} />);
 
-  const msgWrapper = wrapper.find('[data-test="message-wrapper"]').at(0);
-  const sender = wrapper.find('[data-test="message-sender"]').at(0);
-  const message = wrapper.find('[data-test="message-content"]').at(0);
-  const avatar = wrapper.find('[data-test="message-avatar"]').find('img');
+  const msgWrapper = wrapper
+    .find(`[data-cy="message-wrapper${props.isCorrect ? '-correct' : ''}"]`)
+    .at(0);
+  const sender = wrapper.find('[data-cy="message-sender"]').at(0);
+  const message = wrapper
+    .find(`[data-cy="message-content${props.isCorrect ? '-correct' : ''}"]`)
+    .at(0);
+  const avatar = wrapper.find('[data-cy="message-avatar"]').find('img');
 
   return {
     wrapper,

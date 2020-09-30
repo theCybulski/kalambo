@@ -15,7 +15,7 @@ exports[`Button Renders properly with any props 1`] = `
   align-items: center;
 }
 
-<ThemeProvider
+<Component
   theme={
     Object {
       "colors": Object {
@@ -65,5 +65,5 @@ exports[`Button Renders properly with any props 1`] = `
       </button>
     </styled.button>
   </Button>
-</ThemeProvider>
+</Component>
 `;

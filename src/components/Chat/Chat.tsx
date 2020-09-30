@@ -53,8 +53,8 @@ const Chat: React.FC<ChatProps> = observer((props) => {
         })}
       </Styled.MessagesContainer>
       <Styled.InputContainer>
-        <Form onSubmit={sendMessage} resetOnSubmit>
-          <Input name="message" placeholder="Type your message here..." autoComplete="off" />
+        <Form onSubmit={sendMessage} resetOnSubmit dataCy="form-message">
+          <Input name="message" placeholder="Type your message here..." autoComplete="off" data-cy="input-message" />
         </Form>
       </Styled.InputContainer>
     </Styled.Wrapper>

@@ -40,9 +40,17 @@ const CreateRoomForm: React.FC = observer(() => {
     <>
       <Heading as={headingVariant.h2}>Create new room</Heading>
       <Form onSubmit={handleCreateRoom} resetOnSubmit>
-        <Input name="name" placeholder="Your name" autoComplete="off" />
+        <Input
+          name="name"
+          placeholder="Your name"
+          autoComplete="off"
+          data-cy="input-name-create"
+          isRequired
+        />
 
-        <Button type="submit">Create Room</Button>
+        <Button type="submit" data-cy="btn-create-room">
+          Create Room
+        </Button>
       </Form>
     </>
   );
