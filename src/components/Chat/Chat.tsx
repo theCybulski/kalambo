@@ -1,64 +1,67 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { useStores } from 'hooks/useStores';
-import { observer } from 'mobx-react';
-import socket from 'api/api';
+import React, { useEffect, useState, useContext, useCallback } from "react";
 
-import Message from 'components/Chat/Message';
-import Input from 'components/Input/Input';
+import Message from "components/Chat/Message";
+import Input from "components/Input/Input";
+import { RoomContext } from "views/RoomView/RoomContext";
 
-import * as Styled from './ChatStyles';
-import Form from '../Form/Form';
+import * as Styled from "./ChatStyles";
+import Form from "../Form/Form";
+import { wsEvents } from "../../shared/constants";
 
-export type ChatProps = {};
-
-const Chat: React.FC<ChatProps> = observer((props) => {
-  const {
-    playerStore: {
-      localPlayer: { id: localPlayerId, name, roomNo },
-    },
-  } = useStores();
-  const messagesContainer = useRef();
+export const Chat: React.FC = () => {
+  const { sockets: { chat: chatSocket }, settings, localPlayer } = useContext(RoomContext);
   const [messages, setMessages] = useState([]);
 
-  useEffect(() => {
-    socket.emit('joinChat', { name, roomNo }, () => {});
-  }, [name, roomNo]);
-
-  useEffect(() => {
-    socket.on('msgFromServer', (message) => {
-      const { current: msgsCont } = messagesContainer;
-
-      setMessages((prevState) => [...prevState, message]);
-
-      // @ts-ignore
-      msgsCont.scrollTo(0, msgsCont.scrollHeight);
-    });
-
-    return () => socket.removeAllListeners('msgFromServer');
-  }, []);
-
-  const sendMessage = (data) => {
+  const sendMessage = useCallback((data) => {
     const { message } = data;
 
-    message && socket.emit('msgFromClient', { message, roomNo }, () => {});
-  };
+    message && chatSocket.emit(wsEvents.toServer.chat.toServer, {
+      senderName: localPlayer.name,
+      senderId: localPlayer.id,
+      roomId: settings.roomId,
+      content: message
+    });
+  }, [chatSocket, localPlayer, settings]);
+
+  useEffect(() => {
+    const data = { roomId: settings.roomId, name: localPlayer.name };
+
+    chatSocket.emit(wsEvents.toServer.joinRoom, data);
+    return () => chatSocket.emit(wsEvents.toServer.leaveRoom, data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    chatSocket.on(wsEvents.toClient.chat.toClient, (message) => {
+      setMessages((messages) => [...messages, message]);
+    });
+
+    return () => chatSocket.removeAllListeners();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Styled.Wrapper>
-      <Styled.MessagesContainer ref={messagesContainer}>
+      <Styled.MessagesContainer>
         {messages.map((message, index) => {
-          const isLocalPlayer = message.id === localPlayerId;
+          const isLocalPlayer = message.senderId === localPlayer.id;
 
-          return <Message key={index} {...message} {...{ isLocalPlayer }} />;
+          return (
+            <Message
+              key={index}
+              senderName={message.senderName}
+              isCorrect={message.isCorrect}
+              content={message.content}
+              isLocalPlayer={isLocalPlayer}
+            />
+          );
         })}
       </Styled.MessagesContainer>
       <Styled.InputContainer>
         <Form onSubmit={sendMessage} resetOnSubmit dataCy="form-message">
-          <Input name="message" placeholder="Type your message here..." autoComplete="off" data-cy="input-message" />
+          <Input name="message" placeholder="Type your message here..." autoComplete="off" data-cy="input-message"/>
         </Form>
       </Styled.InputContainer>
     </Styled.Wrapper>
   );
-});
-
-export default Chat;
+};

@@ -1,76 +1,49 @@
-import React from 'react';
-import { observer } from 'mobx-react';
-import { useStores } from 'hooks/useStores';
+import React, { useCallback, useContext } from "react";
 
-import ButtonIcon from 'components/ButtonIcon/ButtonIcon';
-import ColorPicker from 'components/ColorPicker/ColorPicker';
+import ButtonIcon from "components/ButtonIcon/ButtonIcon";
+import IconBrush from "assets/icons/IconBrush.svg";
+import IconEraser from "assets/icons/IconEraser.svg";
+import IconClear from "assets/icons/IconClear.svg";
+import { RoomContext } from "views/RoomView/RoomContext";
 
-import IconBrush from 'assets/icons/IconBrush.svg';
-import IconEraser from 'assets/icons/IconEraser.svg';
-import IconClear from 'assets/icons/IconClear.svg';
+import * as Styled from "./DrawingControlsStyles";
 
-import * as Styled from './DrawingControlsStyles';
+export const DrawingControls = () => {
+  const { round: { keyword }, drawingControls, setDrawingControls } = useContext(RoomContext);
 
-const DrawingControls = observer(({ onClear }) => {
-  const {
-    rootStore: {
-      drawingControls: {
-        mode,
-        strokeWidth,
-        strokeColor,
-        strokeColor: {
-          a,
-          hex,
-          rgb,
-          hsvl: { h, s, v, l },
-        },
-      },
-      setTool,
-      setToolSize,
-      setStrokeColor,
-    },
-    roomStore: {
-      currRound: { keyWord },
-    },
-  } = useStores();
+  const setToolSize = useCallback((size: number) => {
+    setDrawingControls(prevState => ({ ...prevState, strokeWidth: size }));
+  }, []);
 
-  const handleChangeComplete = (color) => {
-    const {
-      hex,
-      rgb: { r, g, b },
-      hsv: { h, s, v },
-      hsl: { l },
-      source,
-    } = color;
+  const setTool = useCallback((tool: string) => {
+    setDrawingControls(prevState => ({ ...prevState, mode: tool }));
+  }, []);
 
-    const isSaturation = source === 'hsv';
+  const setColor = useCallback((color: string) => {
+    setDrawingControls(prevState => ({ ...prevState, mode: "brush" }));
+    setDrawingControls(prevState => ({ ...prevState, strokeColor: color }));
+  }, []);
 
-    setStrokeColor({
-      a: strokeColor.a,
-      hex,
-      rgb: { r, g, b },
-      hsvl: {
-        h: isSaturation ? strokeColor.hsvl.h : h,
-        s: isSaturation ? s : strokeColor.hsvl.s,
-        v,
-        l: isSaturation ? l : strokeColor.hsvl.l,
-      },
-    });
-  };
+  const handleClearFlipchart = useCallback(() => {
+    setTool("clear");
+    setTimeout(() => {
+      setTool('brush');
+    }, 100)
+  }, [setTool]);
 
   return (
     <Styled.Wrapper>
       <Styled.KeyWordWrapper>
-        Draw: <span data-cy="keyword">{keyWord}</span>
+        Draw: <span data-cy="keyword">{keyword}</span>
       </Styled.KeyWordWrapper>
       <Styled.Row>
         <Styled.Column>
           <Styled.InputWrapper>
-            <Styled.InputValue data-cy="tool-size">Tool size: {strokeWidth}px</Styled.InputValue>
+            <Styled.InputValue data-cy="tool-size">Tool size: {drawingControls.strokeWidth}px</Styled.InputValue>
             <Styled.SInput
               width="100%"
               type="range"
-              defaultValue={strokeWidth}
+              defaultValue={drawingControls.strokeWidth}
               min="2"
               max="50"
               onChange={({ target }) => setToolSize(target.value)}
@@ -81,8 +54,8 @@ const DrawingControls = observer(({ onClear }) => {
           <ButtonIcon
             icon={IconBrush}
             title="Use brush"
-            onClick={() => setTool('brush')}
-            isActive={mode === 'brush'}
+            onClick={() => setTool("brush")}
+            isActive={drawingControls.mode === "brush"}
             data-cy="btn-brush"
           >
             Use brush
@@ -91,8 +64,8 @@ const DrawingControls = observer(({ onClear }) => {
           <ButtonIcon
             icon={IconEraser}
             title="Use eraser"
-            onClick={() => setTool('eraser')}
-            isActive={mode === 'eraser'}
+            onClick={() => setTool("eraser")}
+            isActive={drawingControls.mode === "eraser"}
             data-cy="btn-eraser"
           >
             Use eraser
@@ -101,24 +74,25 @@ const DrawingControls = observer(({ onClear }) => {
           <ButtonIcon
             icon={IconClear}
             title="Clear flipchart"
-            onClick={onClear}
+            onClick={handleClearFlipchart}
             data-cy="btn-clear"
           >
             Clear all
           </ButtonIcon>
         </Styled.Column>
         <Styled.Column>
-          <ColorPicker
-            hex={hex}
-            rgb={rgb}
-            hsvl={{ h, s, v, l }}
-            a={a}
-            onChange={handleChangeComplete}
-          />
+          <div>
+            <Styled.Button bgColor={"#000"} onClick={() => setColor("#000")}/>
+            <Styled.Button bgColor={"#c80101"} onClick={() => setColor("#c80101")}/>
+            <Styled.Button bgColor={"#09B658"} onClick={() => setColor("#09B658")}/>
+            <Styled.Button bgColor={"#0A78DD"} onClick={() => setColor("#0A78DD")}/>
+            <Styled.Button bgColor={"#5405D4"} onClick={() => setColor("#5405D4")}/>
+            <Styled.Button bgColor={"#F407A4"} onClick={() => setColor("#F407A4")}/>
+            <Styled.Button bgColor={"#FF9900"} onClick={() => setColor("#FF9900")}/>
+            <Styled.Button bgColor={"#FFE600"} onClick={() => setColor("#FFE600")}/>
+          </div>
         </Styled.Column>
       </Styled.Row>
     </Styled.Wrapper>
   );
-});
-
-export default DrawingControls;
+};

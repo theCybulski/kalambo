@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from "styled-components";
 
 export const Wrapper = styled.div`
   height: 100%;
@@ -9,7 +9,7 @@ export const Wrapper = styled.div`
 export const KeyWordWrapper = styled.h2`
   padding: 20px 20px 10px;
   font-size: 20px;
-  border-bottom: 1px solid rgba(${({theme}) => theme.colors.additional}, 0.1);
+  border-bottom: 1px solid rgba(${({ theme }) => theme.colors.additional}, 0.1);
 `;
 
 export const InputWrapper = styled.div`
@@ -21,12 +21,12 @@ export const InputWrapper = styled.div`
 
 export const InputValue = styled.span`
   display: block;
-  font-size: ${({theme}) => theme.fonts.size.small};
+  font-size: ${({ theme }) => theme.fonts.size.small};
 `;
 
 export const SInput = styled.input`
   width: 100%;
-`
+`;
 
 export const Row = styled.div`
   display: flex;
@@ -47,4 +47,18 @@ export const Column = styled.div`
   &:last-child {
     padding: 0 20px 20px 10px;
   }
+`;
+
+export const Button = styled.button`
+  ${({ bgColor }) => css`
+    background-color: ${bgColor};
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    align-items: center;
+    margin: 0 5px 5px 0;
+  `};
 `;
