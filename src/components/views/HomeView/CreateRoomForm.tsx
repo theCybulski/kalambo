@@ -2,12 +2,12 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import { observer } from "mobx-react";
 import axios from "axios";
+
 import Form from "components/Form/Form";
 import Input from "components/Input/Input";
 import Button from "components/Button/Button";
-
+import Heading, { headingVariant } from "components/Heading/Heading";
 import { API_BASE_ENDPOINT } from "shared/config/config";
-import Heading, { headingVariant } from "../../Heading/Heading";
 
 const CreateRoomForm: React.FC = observer(() => {
   const history = useHistory();

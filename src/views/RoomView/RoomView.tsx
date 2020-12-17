@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import io from "socket.io-client";
 
 import { Chat } from "components/Chat/Chat";
@@ -17,7 +17,7 @@ import * as Styled from "./RoomViewStyles";
 const chatSocket = io(`${API_BASE_ENDPOINT}/chat`);
 const roomSocket = io(`${API_BASE_ENDPOINT}/room`);
 
-const RoomView = () => {
+export const RoomView = () => {
   const history = useHistory();
 
   const [localPlayer, setLocalPlayer] = useState<Player>(defaultValues.localPlayer);
@@ -59,6 +59,7 @@ const RoomView = () => {
 
   useEffect(() => {
     roomSocket.on(wsEvents.toClient.serverError, (err) => {
+      console.log(err);
       if (err.code === 404) history.push("/");
     });
 
@@ -84,20 +85,36 @@ const RoomView = () => {
     return () => roomSocket.removeAllListeners();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const isLocalPlayerDrawing = localPlayer.name === "Darek";
+
+  useEffect(() => {
+    const updatedLocalPlayer = players.find(player => player.id === localPlayer.id);
+
+    if (updatedLocalPlayer) {
+      setLocalPlayer(updatedLocalPlayer);
+    }
+  }, [players]);
+
+  const isLocalPlayerDrawing = localPlayer.id === round.drawingPlayerId;
 
   return (
     <Styled.Wrapper>
       <RoomContext.Provider value={contextValue}>
         <TopBar/>
+        Players in room:
         <ul>
           {players && players.map(player => <li key={player.id}>{player.name}</li>)}
         </ul>
-        <Link to='/'>route change</Link>
+        <br/>
+        Drawing player: {round.drawingPlayerId}<br/>
+        Keyword: {round.keyword}<br/>
+        isOn: {round.isOn}<br/>
+        roundNo: {round.roundNo}<br/>
+        timer: {round.timer}<br/>
+        <br/>
         <Styled.Grid>
           <Styled.FlipChartWrapper>
             <Styled.CardFlipChart corners="10px 20px 20px 10px">
-              {settings.roomId && <FlipChart />}
+              {settings.roomId && <FlipChart/>}
             </Styled.CardFlipChart>
           </Styled.FlipChartWrapper>
 
@@ -114,5 +131,3 @@ const RoomView = () => {
     </Styled.Wrapper>
   );
 };
-
-export default RoomView;

@@ -13,16 +13,16 @@ export const DrawingControls = () => {
 
   const setToolSize = useCallback((size: number) => {
     setDrawingControls(prevState => ({ ...prevState, strokeWidth: size }));
-  }, []);
+  }, [setDrawingControls]);
 
   const setTool = useCallback((tool: string) => {
     setDrawingControls(prevState => ({ ...prevState, mode: tool }));
-  }, []);
+  }, [setDrawingControls]);
 
   const setColor = useCallback((color: string) => {
     setDrawingControls(prevState => ({ ...prevState, mode: "brush" }));
     setDrawingControls(prevState => ({ ...prevState, strokeColor: color }));
-  }, []);
+  }, [setDrawingControls]);
 
   const handleClearFlipchart = useCallback(() => {
     setTool("clear");

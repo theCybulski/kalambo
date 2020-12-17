@@ -18,17 +18,15 @@ export const FlipChart = () => {
     sockets: { room: roomSocket },
     settings,
     localPlayer,
+    round: { drawingPlayerId },
     drawingControls: { mode, strokeWidth, strokeColor }
   } = useContext(RoomContext);
 
   const stageWrapper = useRef(null);
-
   const stage = useRef(null);
   const { current: currentStage } = stage;
-
   const layer = useRef(null);
   const { current: currentLayer } = layer;
-
   const image = useRef(null);
   const { current: currentImage } = image;
 
@@ -36,7 +34,7 @@ export const FlipChart = () => {
   const [preview, setPreview] = useState("");
   const [isDrawing, setIsDrawing] = useState(false);
   const [lastPointerPos, setLastPointerPos] = useState({ x: 0, y: 0 });
-  const isLocalPlayerDrawing = localPlayer.name === "Darek";
+  const isLocalPlayerDrawing = localPlayer.id === drawingPlayerId;
 
   const canvas = useMemo(() => {
     const { width, height } = flipChartSize;
@@ -74,6 +72,14 @@ export const FlipChart = () => {
     }
   }, [canvas, strokeColor, strokeWidth, mode]);
 
+  const clearFlipchart = useCallback(() => {
+    if (ctx) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      currentLayer.batchDraw();
+      roomSocket.emit(wsEvents.toServer.round.flipchart, { data: canvas?.toDataURL(), roomId: settings.roomId });
+    }
+  }, [ctx, currentLayer, roomSocket, canvas, settings.roomId]);
+
   useEffect(() => {
     if (isLocalPlayerDrawing) {
       const setSize = () => {
@@ -99,7 +105,7 @@ export const FlipChart = () => {
         setPreview(data);
       });
 
-      return () => roomSocket.removeAllListeners();
+      // return () => roomSocket.removeAllListeners();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDrawing]);
@@ -121,12 +127,10 @@ export const FlipChart = () => {
   }, [canvas, isLocalPlayerDrawing, isDrawing]);
 
   useEffect(() => {
-    if (mode === "clear" && ctx) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      currentLayer.batchDraw();
-      roomSocket.emit(wsEvents.toServer.round.flipchart, { data: canvas?.toDataURL(), roomId: settings.roomId });
+    if (mode === "clear") {
+      clearFlipchart();
     }
-  }, [mode]);
+  }, [mode, clearFlipchart]);
 
   const drawDot = useCallback(() => {
     const pos = currentStage.getPointerPosition();
