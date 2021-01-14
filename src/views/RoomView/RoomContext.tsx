@@ -40,7 +40,8 @@ export const defaultValues = {
     roundNo: null,
     drawingPlayerId: null,
     keyword: null,
-    timer: 0
+    startedAt: null,
+    length: 0
   },
   drawingControls: {
     mode: "brush",

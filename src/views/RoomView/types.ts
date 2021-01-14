@@ -16,7 +16,8 @@ export type RoomRound = {
   roundNo: number;
   drawingPlayerId: string;
   keyword: string;
-  timer: number;
+  startedAt: Date;
+  length: number;
 };
 
 export type DrawingControls = {

@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useMemo } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { observer } from "mobx-react";
 
 import { RoomContext } from "views/RoomView/RoomContext";
@@ -18,31 +18,46 @@ export const TopBar: React.FC<TopBarProps> = observer(() => {
     localPlayer,
     setLocalPlayer,
     round,
-    setRound,
     players
   } = useContext(RoomContext);
 
-  useEffect(() => {
-    roomSocket.on(wsEvents.toClient.round.updateTimer, ({ timer }) => {
-      setRound(prevState => ({ ...prevState, timer }));
-    });
+  const [timer, setTimer] = useState<number>(0);
 
-    return () => roomSocket.removeAllListeners();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  useEffect(() => {
+    if (round.isOn) {
+      const timerInterval = setInterval(() => {
+        const currentTime = new Date().getTime();
+        const startTime = new Date(round.startedAt).getTime();
+
+        const isTimeUp = currentTime - startTime >= round.length;
+
+        setTimer(round.length - (currentTime - startTime))
+
+        if (isTimeUp) clearInterval(timerInterval);
+      }, 1000);
+
+      return () => clearInterval(timerInterval);
+    } else {
+      setTimer(0);
+    }
+  }, [round.isOn, round.length, round.startedAt])
 
   const displayTimer = useMemo(() => {
-    const min = Math.floor(round.timer / 60);
-    const sec = round.timer - min * 60;
+    const min = Math.floor(timer / 60000);
+    const sec = parseInt(((timer % 60000) / 1000).toFixed(0));
 
     if (sec === 0 && min === 0) return "0:00";
 
     return `${min}:${sec < 10 ? `0${sec}` : sec}`;
-  }, [round.timer]);
+  }, [timer]);
 
   const adminName = useMemo(() => {
     return players?.find((player) => player.id === settings.adminId)?.name;
-  }, [players, settings]);
+  }, [players, settings.adminId]);
+
+  const drawingPlayerName = useMemo(() => {
+    return players?.find(player => player.id === round.drawingPlayerId)?.name;
+  }, [players, round.drawingPlayerId])
 
   const isEverybodyReady = useMemo(() => {
     return players.every(player => player.isReady);
@@ -67,7 +82,10 @@ export const TopBar: React.FC<TopBarProps> = observer(() => {
           <Styled.Info>
             <Link to='/'>[Leave room]</Link><br/>
             Room: {settings.roomId}
-            <span>Admin: {adminName}</span>
+            <span>
+              Admin: {adminName}
+              {drawingPlayerName && ` | Drawing: ${drawingPlayerName}`}
+            </span>
           </Styled.Info>
           <Styled.Timer data-cy="round-timer">{displayTimer}</Styled.Timer>
         </Styled.InfoWrapper>

@@ -92,7 +92,7 @@ export const RoomView = () => {
     if (updatedLocalPlayer) {
       setLocalPlayer(updatedLocalPlayer);
     }
-  }, [players]);
+  }, [players, localPlayer.id]);
 
   const isLocalPlayerDrawing = localPlayer.id === round.drawingPlayerId;
 
@@ -105,11 +105,8 @@ export const RoomView = () => {
           {players && players.map(player => <li key={player.id}>{player.name}</li>)}
         </ul>
         <br/>
-        Drawing player: {round.drawingPlayerId}<br/>
         Keyword: {round.keyword}<br/>
-        isOn: {round.isOn}<br/>
-        roundNo: {round.roundNo}<br/>
-        timer: {round.timer}<br/>
+        isOn: {JSON.stringify(round.isOn)}<br/>
         <br/>
         <Styled.Grid>
           <Styled.FlipChartWrapper>
