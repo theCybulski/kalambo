@@ -21,15 +21,14 @@ export const Chat: React.FC = () => {
       roomId: settings.roomId,
       content: message
     });
-  }, [chatSocket, localPlayer, settings]);
+  }, [chatSocket, localPlayer.name, localPlayer.id, settings.roomId]);
 
   useEffect(() => {
     const data = { roomId: settings.roomId, name: localPlayer.name };
 
     chatSocket.emit(wsEvents.toServer.joinRoom, data);
     return () => chatSocket.emit(wsEvents.toServer.leaveRoom, data);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [chatSocket, settings.roomId, localPlayer.name]);
 
   useEffect(() => {
     chatSocket.on(wsEvents.toClient.chat.toClient, (message) => {
@@ -37,8 +36,7 @@ export const Chat: React.FC = () => {
     });
 
     return () => chatSocket.removeAllListeners();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [chatSocket]);
 
   return (
     <Styled.Wrapper>
