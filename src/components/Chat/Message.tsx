@@ -4,14 +4,14 @@ import * as Styled from './MessageStyles';
 
 export type MessageProps = {
   timestamp?: string;
-  player: string;
+  senderName: string;
   avatar?: string | null;
-  message: string;
+  content: string;
   isCorrect: boolean;
   isLocalPlayer: boolean;
 };
 
-const Message: React.FC<MessageProps> = ({ player, avatar, message, isCorrect, isLocalPlayer }) => {
+const Message: React.FC<MessageProps> = ({ senderName, avatar, content, isCorrect, isLocalPlayer }) => {
   return (
     <Styled.Wrapper>
       {avatar && (
@@ -24,15 +24,15 @@ const Message: React.FC<MessageProps> = ({ player, avatar, message, isCorrect, i
         alignRight={isLocalPlayer}
         data-cy={`message-wrapper${isCorrect ? '-correct' : ''}`}
       >
-        {player && !isLocalPlayer && (
-          <Styled.Sender data-cy="message-sender">{player}</Styled.Sender>
+        {senderName && !isLocalPlayer && (
+          <Styled.Sender data-cy="message-sender">{senderName}</Styled.Sender>
         )}
         <Styled.Message
           isCorrect={isCorrect}
           isLocalPlayer={isLocalPlayer}
           data-cy={`message-content${isCorrect ? '-correct' : ''}`}
         >
-          {message}
+          {content}
         </Styled.Message>
       </Styled.MessageWrapper>
     </Styled.Wrapper>

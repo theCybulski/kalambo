@@ -1,79 +1,113 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { observer } from "mobx-react";
 
-import * as Styled from './TopBarStyles';
-import { useStores } from 'hooks/useStores';
-import { observer } from 'mobx-react';
-import socket from '../../api/api';
+import { RoomContext } from "views/RoomView/RoomContext";
+import { wsEvents } from "shared/constants";
+
+import * as Styled from "./TopBarStyles";
+import { Link } from "react-router-dom";
 
 export type TopBarProps = {};
 
-const TopBar: React.FC<TopBarProps> = observer(() => {
+export const TopBar: React.FC<TopBarProps> = observer(() => {
   const {
-    playerStore: {
-      localPlayer: { isReady },
-      setPlayerReady,
+    sockets: {
+      room: roomSocket
     },
-    roomStore: {
-      roomNo,
-      roomAdmin,
-      players,
-      currRound: { timer, isOn, roundNo },
-      isEverybodyReady,
-    },
-  } = useStores();
+    settings,
+    localPlayer,
+    setLocalPlayer,
+    round,
+    players
+  } = useContext(RoomContext);
+
+  const [timer, setTimer] = useState<number>(0);
+
+  useEffect(() => {
+    if (round.isOn) {
+      const timerInterval = setInterval(() => {
+        const currentTime = new Date().getTime();
+        const startTime = new Date(round.startedAt).getTime();
+
+        const isTimeUp = currentTime - startTime >= round.length;
+
+        setTimer(round.length - (currentTime - startTime))
+
+        if (isTimeUp) clearInterval(timerInterval);
+      }, 1000);
+
+      return () => clearInterval(timerInterval);
+    } else {
+      setTimer(0);
+    }
+  }, [round.isOn, round.length, round.startedAt])
 
   const displayTimer = useMemo(() => {
-    const min = Math.floor(timer / 60);
-    const sec = timer - min * 60;
+    const min = Math.floor(timer / 60000);
+    const sec = parseInt(((timer % 60000) / 1000).toFixed(0));
 
-    if (sec === 0 && min === 0) return '0:00';
+    if (sec === 0 && min === 0) return "0:00";
 
     return `${min}:${sec < 10 ? `0${sec}` : sec}`;
   }, [timer]);
 
   const adminName = useMemo(() => {
-    const name = players?.find((player) => player.id === roomAdmin)?.name;
+    return players?.find((player) => player.id === settings.adminId)?.name;
+  }, [players, settings.adminId]);
 
-    return name;
-  }, [roomAdmin, players]);
+  const drawingPlayerName = useMemo(() => {
+    return players?.find(player => player.id === round.drawingPlayerId)?.name;
+  }, [players, round.drawingPlayerId])
 
-  const startRound = () => {
-    socket.emit('startRound', { roomNo });
-    setPlayerReady(false);
-  };
+  const isEverybodyReady = useMemo(() => {
+    return players.every(player => player.isReady);
+  }, [players]);
+
+  const startRound = useCallback(() => {
+    setLocalPlayer(prevState => ({ ...prevState, isReady: false }));
+    roomSocket.emit(wsEvents.toServer.round.start, { roomId: settings.roomId });
+  }, [roomSocket, setLocalPlayer, settings.roomId]);
 
   const handleSetPlayerReady = useCallback(() => {
-    setPlayerReady(!isReady);
-  }, [isReady, setPlayerReady]);
+    setLocalPlayer(prevState => ({ ...prevState, isReady: !prevState.isReady }));
+    roomSocket.emit(wsEvents.toServer.round.updatePlayers, {
+      ...localPlayer, isReady: !localPlayer.isReady, roomId: settings.roomId
+    });
+  }, [roomSocket, setLocalPlayer, settings, localPlayer]);
 
   return (
     <Styled.Wrapper>
       <Styled.Grid>
         <Styled.InfoWrapper>
           <Styled.Info>
-            Room: {roomNo}
-            <span>Admin: {adminName}</span>
+            <Link to='/'>[Leave room]</Link><br/>
+            Room: {settings.roomId}
+            <span>
+              Admin: {adminName}
+              {drawingPlayerName && ` | Drawing: ${drawingPlayerName}`}
+            </span>
           </Styled.Info>
           <Styled.Timer data-cy="round-timer">{displayTimer}</Styled.Timer>
         </Styled.InfoWrapper>
         <Styled.ControlsWrapper>
           <div>
             <h1>Controls</h1>
-            <button onClick={startRound} disabled={!isEverybodyReady || isOn} data-cy="btn-start-round">
-              Start Round
-            </button>
-            <br />
+            My score: {localPlayer.score}
+            {localPlayer.id === settings.adminId && !round.isOn && (
+              <button onClick={startRound} disabled={!isEverybodyReady || round.isOn} data-cy="btn-start-round">
+                Start Round
+              </button>
+            )}
+            <br/>
             <button onClick={handleSetPlayerReady} data-cy="btn-ready">
-              {isReady ? 'Not ready' : 'Ready'}
+              {localPlayer.isReady ? "Not ready" : "Ready"}
             </button>
           </div>
           <div data-cy="round-counter">
-            Round #{roundNo} {isOn && '+'}
+            Round #{round.roundNo} {round.isOn && "+"}
           </div>
         </Styled.ControlsWrapper>
       </Styled.Grid>
     </Styled.Wrapper>
   );
 });
-
-export default TopBar;

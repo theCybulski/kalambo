@@ -2,61 +2,44 @@ import React, {
   useState,
   useRef,
   useEffect,
-  forwardRef,
-  useImperativeHandle,
-  useMemo,
-} from 'react';
-import { Image, Layer, Stage } from 'react-konva';
-import socket from 'api/api';
-import { useStores } from 'hooks/useStores';
+  useMemo, useContext, useCallback
+} from "react";
+import { Image, Layer, Stage } from "react-konva";
 
-import * as Styled from './FlipChartStyles';
+import { RoomContext } from "views/RoomView/RoomContext";
+import { wsEvents } from "shared/constants";
+
+import * as Styled from "./FlipChartStyles";
 
 export type FlipChartTypes = {};
 
-const FlipChart = forwardRef<FlipChartTypes>(({ ...props }, ref) => {
-  useImperativeHandle(ref, () => ({
-    clearAll() {
-      if (ctx) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        currentLayer.batchDraw();
-        handleSetPreview();
-      }
-    },
-  }));
-
+export const FlipChart = () => {
   const {
-    rootStore: {
-      drawingControls: { mode, strokeWidth, strokeColor },
-    },
-    playerStore: {
-      localPlayer: { roomNo, id: localPlayerId },
-    },
-    roomStore: { drawingPlayerId },
-  } = useStores();
+    sockets: { room: roomSocket },
+    settings,
+    localPlayer,
+    round: { drawingPlayerId },
+    drawingControls: { mode, strokeWidth, strokeColor }
+  } = useContext(RoomContext);
 
   const stageWrapper = useRef(null);
-
   const stage = useRef(null);
   const { current: currentStage } = stage;
-
   const layer = useRef(null);
   const { current: currentLayer } = layer;
-
   const image = useRef(null);
   const { current: currentImage } = image;
 
   const [flipChartSize, setFlipChartSize] = useState({ width: null, height: null });
-  const [preview, setPreview] = useState('');
+  const [preview, setPreview] = useState("");
   const [isDrawing, setIsDrawing] = useState(false);
   const [lastPointerPos, setLastPointerPos] = useState({ x: 0, y: 0 });
-  const [previewInterval, setPreviewInterval] = useState(null);
-  const isDrawingPlayer = localPlayerId === drawingPlayerId;
+  const isLocalPlayerDrawing = localPlayer.id === drawingPlayerId;
 
   const canvas = useMemo(() => {
     const { width, height } = flipChartSize;
     if (width && height) {
-      const c = document.createElement('canvas');
+      const c = document.createElement("canvas");
       c.width = width;
       c.height = height;
 
@@ -66,26 +49,22 @@ const FlipChart = forwardRef<FlipChartTypes>(({ ...props }, ref) => {
 
   const ctx = useMemo(() => {
     if (canvas) {
-      const context = canvas.getContext('2d');
-      const {
-        a,
-        rgb: { r, g, b },
-      } = strokeColor;
+      const context = canvas.getContext("2d");
 
-      context.strokeStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
+      context.strokeStyle = strokeColor;
       context.shadowColor = strokeColor;
       context.shadowBlur = 2;
-      context.lineJoin = 'round';
-      context.lineCap = 'round';
+      context.lineJoin = "round";
+      context.lineCap = "round";
       context.lineWidth = strokeWidth;
       context.imageSmoothingEnabled = true;
 
       switch (mode) {
-        case 'brush':
-          context.globalCompositeOperation = 'source-over';
+        case "brush":
+          context.globalCompositeOperation = "source-over";
           break;
-        case 'eraser':
-          context.globalCompositeOperation = 'destination-out';
+        case "eraser":
+          context.globalCompositeOperation = "destination-out";
           break;
       }
 
@@ -93,66 +72,82 @@ const FlipChart = forwardRef<FlipChartTypes>(({ ...props }, ref) => {
     }
   }, [canvas, strokeColor, strokeWidth, mode]);
 
+  const clearFlipchart = useCallback(() => {
+    if (ctx) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      currentLayer.batchDraw();
+      roomSocket.emit(wsEvents.toServer.round.flipchart, { data: canvas?.toDataURL(), roomId: settings.roomId });
+    }
+  }, [ctx, currentLayer, roomSocket, canvas, settings.roomId]);
+
   useEffect(() => {
-    if (isDrawingPlayer) {
+    if (isLocalPlayerDrawing) {
       const setSize = () => {
         const { clientWidth, clientHeight } = stageWrapper.current;
 
         setFlipChartSize({
           width: clientWidth,
-          height: clientHeight,
+          height: clientHeight
         });
       };
 
       setSize();
-      window.addEventListener('resize', setSize);
+      window.addEventListener("resize", setSize);
 
-      return () => window.removeEventListener('resize', setSize);
+      return () => window.removeEventListener("resize", setSize);
     }
-  }, [isDrawingPlayer]);
+  }, [isLocalPlayerDrawing]);
 
   useEffect(() => {
-    socket.on('broadcastPreviewData', ({ data }) => {
-      console.log('preview data');
-      setPreview(data);
-    });
+    if (!isDrawing) {
+      roomSocket.on(wsEvents.toClient.round.flipchart, (data) => {
+        console.log("setting data");
+        setPreview(data);
+      });
 
-    return () => socket.removeAllListeners('broadcastPreviewData');
-  }, []);
+      // return () => roomSocket.removeAllListeners();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDrawing]);
 
-  const handleSetPreview = () => {
-    console.log('emitting...');
+  useEffect(() => {
+    if (isLocalPlayerDrawing) {
+      roomSocket.emit(wsEvents.toServer.round.flipchart, { data: canvas?.toDataURL(), roomId: settings.roomId });
 
-    socket.emit('emitPreviewData', { data: canvas.toDataURL(), roomNo }, () => {});
-  };
+      const interval = setInterval(() => {
+        if (isDrawing) {
+          console.log("emitting...");
+          roomSocket.emit(wsEvents.toServer.round.flipchart, { data: canvas?.toDataURL(), roomId: settings.roomId });
+        }
+      }, 300);
 
-  const handleBrushDown = () => {
-    console.log('brush down');
+      return () => clearInterval(interval);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [canvas, isLocalPlayerDrawing, isDrawing]);
 
-    setIsDrawing(true);
-    setLastPointerPos(stage.current.getPointerPosition());
+  useEffect(() => {
+    if (mode === "clear") {
+      clearFlipchart();
+    }
+  }, [mode, clearFlipchart]);
 
-    drawDot();
-
-    !previewInterval && setPreviewInterval(setInterval(handleSetPreview, 500));
-  };
-
-  const drawDot = () => {
+  const drawDot = useCallback(() => {
     const pos = currentStage.getPointerPosition();
     ctx.beginPath();
     ctx.lineTo(pos.x, pos.y);
     ctx.stroke();
     ctx.closePath();
     currentLayer.batchDraw();
-  };
+  }, [currentLayer, ctx, currentStage]);
 
-  const drawLine = () => {
+  const drawLine = useCallback(() => {
     const pos = currentStage.getPointerPosition();
 
     ctx.beginPath();
     const localPos = {
       x: lastPointerPos.x - currentImage.x(),
-      y: lastPointerPos.y - currentImage.y(),
+      y: lastPointerPos.y - currentImage.y()
     };
     ctx.moveTo(localPos.x, localPos.y);
 
@@ -164,53 +159,51 @@ const FlipChart = forwardRef<FlipChartTypes>(({ ...props }, ref) => {
     setLastPointerPos(pos);
 
     currentLayer.batchDraw();
-  };
+  }, [ctx, currentLayer, lastPointerPos, currentStage, currentImage]);
 
-  const handleBrushUp = () => {
-    console.log('brush up');
+  const handleBrushDown = useCallback(() => {
+    setIsDrawing(true);
+    setLastPointerPos(stage.current.getPointerPosition());
 
-    handleSetPreview();
+    drawDot();
+  }, [setIsDrawing, setLastPointerPos, drawDot]);
+
+  const handleBrushUp = useCallback(() => {
     setIsDrawing(false);
-    clearInterval(previewInterval);
-    setPreviewInterval(null);
-  };
+  }, [setIsDrawing]);
 
-  const handleDrawing = () => {
+  const handleDrawing = useCallback(() => {
     if (ctx && isDrawing) {
-      console.log('drawing');
       drawLine();
     }
-  };
+  }, [ctx, isDrawing, drawLine]);
 
   return (
-    <>
-      {isDrawingPlayer ? (
-        <Styled.StageWrapper ref={stageWrapper}>
-          <Stage ref={stage} width={flipChartSize.width} height={flipChartSize.height}>
-            <Layer ref={layer}>
-              <Image
-                image={canvas}
-                ref={image}
-                onMouseDown={handleBrushDown}
-                onTouchStart={handleBrushDown}
-                onMouseUp={handleBrushUp}
-                onTouchEnd={handleBrushUp}
-                onMouseMove={handleDrawing}
-                onTouchMove={handleDrawing}
-                onMouseLeave={handleBrushUp}
-              />
-            </Layer>
-          </Stage>
-        </Styled.StageWrapper>
-      ) : (
-        preview && (
-          <Styled.PreviewWrapper>
-            <Styled.Preview src={preview} alt="preview" />
-          </Styled.PreviewWrapper>
-        )
-      )}
-    </>
+    isLocalPlayerDrawing ? (
+      <Styled.StageWrapper ref={stageWrapper}>
+        <Stage ref={stage} width={flipChartSize.width} height={flipChartSize.height}>
+          <Layer ref={layer}>
+            <Image
+              image={canvas}
+              ref={image}
+              onMouseDown={handleBrushDown}
+              onTouchStart={handleBrushDown}
+              onMouseUp={handleBrushUp}
+              onTouchEnd={handleBrushUp}
+              onMouseMove={handleDrawing}
+              onTouchMove={handleDrawing}
+              onMouseLeave={handleBrushUp}
+            />
+          </Layer>
+        </Stage>
+      </Styled.StageWrapper>
+    ) : (
+      preview && (
+        <Styled.PreviewWrapper>
+          <Styled.Preview src={preview} alt="preview"/>
+        </Styled.PreviewWrapper>
+      )
+    )
   );
-});
+};
 
-export default FlipChart;
