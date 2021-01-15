@@ -59,10 +59,10 @@ export const RoomView = () => {
   }, []);
 
   useEffect(() => {
-    roomSocket.on(wsEvents.toClient.serverError, (err) => {
-      console.log(err);
-      if (err.code === 404) history.push('/');
-    });
+    // roomSocket.on(wsEvents.toClient.serverError, (err) => {
+    //   console.log(err);
+    //   if (err.code === 404) history.push('/');
+    // });
 
     roomSocket.on(wsEvents.toClient.joinedRoom, (data) => {
       setLocalPlayer(data.player);

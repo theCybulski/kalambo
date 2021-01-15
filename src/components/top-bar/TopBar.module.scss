@@ -9,35 +9,5 @@
     display: grid;
     grid-gap: 20px;
     grid-template-columns: repeat(12, 1fr);
-
-    .infoWrapper {
-      grid-column-start: 1;
-      grid-column-end: 9;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      .info {
-        font-size: $font-size-20;
-
-        span {
-          display: block;
-          font-size: $font-size-12;
-          font-weight: $font-weight-regular;
-          color: rgba($black, 0.5);
-          margin-top: 5px;
-        }
-      }
-
-      .timer {
-        text-align: right;
-        font-size: $font-size-20;
-      }
-    }
-
-    .controlsWrapper {
-      grid-column-start: 9;
-      grid-column-end: 12;
-    }
   }
 }

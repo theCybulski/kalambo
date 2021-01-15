@@ -31,7 +31,7 @@ export const defaultValues = {
   localPlayer: {
     id: null,
     name: '',
-    score: null,
+    score: 0,
     isReady: false,
   },
   players: [],

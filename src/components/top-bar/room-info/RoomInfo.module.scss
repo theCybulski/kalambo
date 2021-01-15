@@ -1,0 +1,22 @@
+@import "shared/styles/index";
+
+.wrapper {
+  grid-column: 1/9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .info {
+    font-size: $font-size-20;
+    font-weight: $font-weight-bold;
+    margin-bottom: 0;
+
+    span {
+      display: block;
+      font-size: $font-size-12;
+      font-weight: $font-weight-regular;
+      color: rgba($black, 0.5);
+      margin-top: 5px;
+    }
+  }
+}

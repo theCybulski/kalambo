@@ -1,4 +1,5 @@
 import React, { HTMLAttributes } from 'react';
+import cn from 'classnames';
 
 import styles from './Heading.module.scss';
 
@@ -13,29 +14,35 @@ export enum headingVariant {
 
 export interface HeadingProps extends HTMLAttributes<HTMLHeadingElement> {
   as: headingVariant;
+  className?: string;
 }
 
-const Heading: React.FC<HeadingProps> = ({ as, children, ...rest }) => {
+const Heading: React.FC<HeadingProps> = ({
+  as,
+  children,
+  className,
+  ...rest
+}) => {
   const renderHeading = () => {
     switch (as) {
       case headingVariant.h1:
-        return <h1 {...rest}>{children}</h1>;
+        return <h1 className={cn(styles.wrapper, className)} {...rest}>{children}</h1>;
       case headingVariant.h2:
-        return <h2 {...rest}>{children}</h2>;
+        return <h2 className={cn(styles.wrapper, className)} {...rest}>{children}</h2>;
       case headingVariant.h3:
-        return <h3 {...rest}>{children}</h3>;
+        return <h3 className={cn(styles.wrapper, className)} {...rest}>{children}</h3>;
       case headingVariant.h4:
-        return <h4 {...rest}>{children}</h4>;
+        return <h4 className={cn(styles.wrapper, className)} {...rest}>{children}</h4>;
       case headingVariant.h5:
-        return <h5 {...rest}>{children}</h5>;
+        return <h5 className={cn(styles.wrapper, className)} {...rest}>{children}</h5>;
       case headingVariant.h6:
-        return <h6 {...rest}>{children}</h6>;
+        return <h6 className={cn(styles.wrapper, className)} {...rest}>{children}</h6>;
       default:
-        return <h1 {...rest}>{children}</h1>;
+        return <h1 className={cn(styles.wrapper, className)} {...rest}>{children}</h1>;
     }
   };
 
-  return <div className={styles.wrapper}>{renderHeading()}</div>;
+  return renderHeading();
 };
 
 export default Heading;

@@ -31,6 +31,7 @@
   .label {
     margin-left: 10px;
     opacity: 0.6;
+    transition: opacity 0.2s ease-out
   }
 
   .icon {
@@ -53,6 +54,14 @@
 
     &.clear {
       mask-image: url('./assets/icon-clear.svg');
+    }
+
+    &.scoreBoard {
+      mask-image: url('./assets/icon-score-board.svg');
+    }
+
+    &.settings {
+      mask-image: url('./assets/icon-settings.svg');
     }
   }
 }

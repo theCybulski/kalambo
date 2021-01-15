@@ -1,0 +1,32 @@
+@import 'shared/styles/index';
+
+.wrapper {
+  grid-column: 9/13;
+  display: flex;
+  align-items: center;
+
+  .left {
+    .roundCounter {
+      margin-bottom: 0;
+    }
+  }
+
+  .right {
+    display: flex;
+    justify-content: flex-end;
+    flex: 1;
+
+    .scoreBoard {
+      display: flex;
+      flex-direction: row-reverse;
+      margin-right: 20px;
+
+      span {
+        margin-right: 10px;
+        font-size: $font-size-20;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: $font-weight-regular;
+      }
+    }
+  }
+}
