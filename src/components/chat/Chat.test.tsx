@@ -1,6 +1,5 @@
 import React from 'react';
-
-import { mountWithMockedStore } from 'utils/tests/testsUtils';
+import { mount } from 'enzyme';
 
 import { Chat } from './Chat';
 
@@ -9,7 +8,7 @@ jest.mock('api/api');
 describe(`${Chat.name}`, () => {
   it('Renders properly with messages', async () => {
     Element.prototype.scrollTo = () => {};
-    const wrapper = mountWithMockedStore(<Chat />);
+    const wrapper = mount(<Chat />);
     const message = wrapper.find('Message').find('[data-cy="message-content"]').at(0);
     const msgInput = wrapper.find('input[name="message"]');
 
