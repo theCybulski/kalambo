@@ -2,7 +2,7 @@ import React from 'react';
 
 import { mountWithMockedStore } from 'utils/tests/testsUtils';
 
-import Chat from './Chat';
+import { Chat } from './Chat';
 
 jest.mock('api/api');
 
