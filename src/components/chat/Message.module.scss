@@ -1,0 +1,62 @@
+@import 'shared/styles/index';
+
+.wrapper {
+  display: flex;
+  width: 100%;
+  margin-bottom: 10px;
+
+  .avatarWrapper {
+    display: flex;
+    align-items: flex-end;
+
+    .avatar {
+      content: '';
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: red;
+      margin-right: 5px;
+    }
+  }
+
+  .messageWrapper {
+    flex: 1;
+
+    &.isLocalPlayer {
+      text-align: right;
+
+      .message {
+        background-color: rgba($purple, 1);
+        color: #fff;
+        border-radius: 20px 20px 10px 20px;
+      }
+    }
+
+    &.isCorrect {
+      .message {
+        color: #fff;
+        background-color: $orange;
+      }
+    }
+
+    .sender {
+      font-size: $font-size-12;
+      font-weight: $font-weight-regular;
+      line-height: 1.3em;
+      color: rgba($black, 0.35);
+      margin: 0 0 5px 10px;
+    }
+
+    .message {
+      font-size: $font-size-16;
+      font-weight: $font-weight-light;
+      line-height: 1.3em;
+      background-color: rgba($black, 0.1);
+      padding: 6px 12px;
+      width: auto;
+      max-width: 75%;
+      display: inline-block;
+      border-radius: 20px 20px 20px 10px;
+    }
+  }
+}

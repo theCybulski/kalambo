@@ -1,0 +1,17 @@
+.stageWrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.previewWrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .preview {
+    max-width: 100%;
+    max-height: 100%;
+  }
+}

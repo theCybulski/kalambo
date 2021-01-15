@@ -12,7 +12,7 @@ export type Player = {
 }
 
 export type RoomRound = {
-  isOn: boolean
+  isOn: boolean;
   roundNo: number;
   drawingPlayerId: string;
   keyword: string;

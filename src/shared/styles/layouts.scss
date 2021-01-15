@@ -1,0 +1,10 @@
+$breakpoint-tablet: 768px;
+$breakpoint-tablet-wide: 1024px;
+$breakpoint-desktop: 1440px;
+
+$breakpoint-max-mobile: 'max-width: #{$breakpoint-tablet - 1px}';
+$breakpoint-min-tablet: 'min-width: #{$breakpoint-tablet}';
+$breakpoint-max-tablet: 'max-width: #{$breakpoint-tablet-wide - 1px}';
+$breakpoint-min-tablet-wide: 'min-width: #{$breakpoint-tablet-wide}';
+$breakpoint-max-tablet-wide: 'max-width: #{$breakpoint-desktop - 1px}';
+$breakpoint-min-desktop: 'min-width: #{$breakpoint-desktop}';

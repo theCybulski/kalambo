@@ -1,0 +1,19 @@
+.wrapper {
+  height: 100%;
+
+  .messagesContainer {
+    flex: 1;
+    flex-shrink: 0;
+    overflow: auto;
+    padding: 10px 10px 0;
+    height: calc(100% - 65px);
+  }
+
+  .inputContainer {
+    padding: 10px;
+
+    .input {
+      margin: 0;
+    }
+  }
+}

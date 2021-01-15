@@ -1,0 +1,50 @@
+@import 'index';
+
+@import url('https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+
+* { box-sizing: border-box; }
+
+button {
+  padding: 0;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  &:focus{
+    outline: none;
+  }
+}
+
+body {
+  position: relative;
+}
+
+html {
+  font-family: "Mukta", sans-serif;
+  font-weight: $font-weight-regular;
+  overflow-x: hidden;
+}
+
+a, button, p {
+  font-family: 'Mukta', sans-serif;
+  font-size: $font-size-16;
+  line-height: 1.3rem;
+  font-weight: 400;
+}
+
+input {
+  font-family: 'Mukta', sans-serif;
+  font-size: $font-size-16;
+  line-height: 1.3rem;
+  font-weight: $font-weight-light;
+}
+
+a {
+  text-decoration: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Montserrat', sans-serif;
+  //font-weight: $font-weight-regular;
+}

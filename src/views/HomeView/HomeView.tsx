@@ -1,20 +1,17 @@
-import React from "react";
+import React from 'react';
 
-import CreateRoomForm from "components/views/HomeView/CreateRoomForm";
-import JoinRoomForm from "components/views/HomeView/JoinRoomForm";
+import { CreateRoomForm } from 'components/views/home-view/create-room-form/CreateRoomForm';
+import { JoinRoomForm } from 'components/views/home-view/join-room-form/JoinRoomForm';
 
-import * as Styled from "./HomeViewStyles";
+import styles from './HomeView.module.scss';
 
-export const HomeView = () => {
-  return (
-    <Styled.Wrapper>
-      <Styled.FormsWrapper>
-        <CreateRoomForm/>
-        <br/>
-        <br/>
-        <br/>
-        <JoinRoomForm/>
-      </Styled.FormsWrapper>
-    </Styled.Wrapper>
-  );
-};
+export const HomeView = () => (
+  <div className={styles.wrapper}>
+    <div className={styles.formsWrapper}>
+
+      <CreateRoomForm className={styles.formCreate} />
+      <JoinRoomForm />
+
+    </div>
+  </div>
+);

@@ -1,18 +1,18 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { useHistory } from "react-router-dom";
-import io from "socket.io-client";
+import React, { useEffect, useMemo, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import io from 'socket.io-client';
 
-import { Chat } from "components/Chat/Chat";
-import { API_BASE_ENDPOINT } from "shared/config/config";
-import { useSearchParams } from "utils/use-search-params";
-import { wsEvents } from "shared/constants";
-import { TopBar } from "components/TopBar/TopBar";
-import { FlipChart } from "components/FlipChart/FlipChart";
-import { DrawingControls } from "components/FlipChart/DrawingControls";
+import { Chat } from 'components/chat/Chat';
+import { API_BASE_ENDPOINT } from 'shared/config/config';
+import { useSearchParams } from 'utils/use-search-params';
+import { wsEvents } from 'shared/constants/wsEvents';
+import { TopBar } from 'components/top-bar/TopBar';
+import { FlipChart } from 'components/flip-chart/FlipChart';
+import { DrawingControls } from 'components/flip-chart/DrawingControls';
 
-import { DrawingControls as DrawingControlsType, Player, RoomRound, RoomSettings } from "./types";
-import { RoomContext, defaultValues } from "./RoomContext";
-import * as Styled from "./RoomViewStyles";
+import { DrawingControls as DrawingControlsType, Player, RoomRound, RoomSettings } from './types';
+import { RoomContext, defaultValues } from './RoomContext';
+import styles from './RoomView.module.scss';
 
 const chatSocket = io(`${API_BASE_ENDPOINT}/chat`);
 const roomSocket = io(`${API_BASE_ENDPOINT}/room`);
@@ -24,14 +24,15 @@ export const RoomView = () => {
   const [players, setPlayers] = useState<Player[]>(defaultValues.players);
   const [settings, setSettings] = useState<RoomSettings>(defaultValues.settings);
   const [round, setRound] = useState<RoomRound>(defaultValues.round);
-  const [drawingControls, setDrawingControls] = useState<DrawingControlsType>(defaultValues.drawingControls);
+  const [drawingControls, setDrawingControls] =
+    useState<DrawingControlsType>(defaultValues.drawingControls);
 
   const { roomId, name } = useSearchParams();
 
   const contextValue = useMemo(() => ({
     sockets: {
       chat: chatSocket,
-      room: roomSocket
+      room: roomSocket,
     },
     settings,
     setSettings,
@@ -42,13 +43,13 @@ export const RoomView = () => {
     round,
     setRound,
     drawingControls,
-    setDrawingControls
+    setDrawingControls,
   }), [
     settings,
     localPlayer,
     players,
     round,
-    drawingControls
+    drawingControls,
   ]);
 
   useEffect(() => {
@@ -60,7 +61,7 @@ export const RoomView = () => {
   useEffect(() => {
     roomSocket.on(wsEvents.toClient.serverError, (err) => {
       console.log(err);
-      if (err.code === 404) history.push("/");
+      if (err.code === 404) history.push('/');
     });
 
     roomSocket.on(wsEvents.toClient.joinedRoom, (data) => {
@@ -97,34 +98,34 @@ export const RoomView = () => {
   const isLocalPlayerDrawing = localPlayer.id === round.drawingPlayerId;
 
   return (
-    <Styled.Wrapper>
+    <div className={styles.wrapper}>
       <RoomContext.Provider value={contextValue}>
-        <TopBar/>
-        Players in room:
-        <ul>
-          {players && players.map(player => <li key={player.id}>{player.name}</li>)}
-        </ul>
-        <br/>
-        Keyword: {round.keyword}<br/>
-        isOn: {JSON.stringify(round.isOn)}<br/>
-        <br/>
-        <Styled.Grid>
-          <Styled.FlipChartWrapper>
-            <Styled.CardFlipChart corners="10px 20px 20px 10px">
-              {settings.roomId && <FlipChart/>}
-            </Styled.CardFlipChart>
-          </Styled.FlipChartWrapper>
+        <TopBar />
+        {/* Players in room:*/}
+        {/* <ul>*/}
+        {/*  {players && players.map(player => <li key={player.id}>{player.name}</li>)}*/}
+        {/* </ul>*/}
+        {/* <br/>*/}
+        {/* Keyword: {round.keyword}<br/>*/}
+        {/* isOn: {JSON.stringify(round.isOn)}<br/>*/}
+        {/* <br/>*/}
+        <div className={styles.grid}>
+          <div className={styles.flipChartWrapper}>
+            <div className={styles.cardFlipChart}>
+              {settings.roomId && <FlipChart />}
+            </div>
+          </div>
 
-          <Styled.SideElementsWrapper>
-            <Styled.CardChat corners="20px 10px 20px 20px">
-              {settings.roomId && <Chat/>}
-            </Styled.CardChat>
-            <Styled.CardControls corners="20px 20px 10px 20px">
-              {isLocalPlayerDrawing && settings.roomId && <DrawingControls/>}
-            </Styled.CardControls>
-          </Styled.SideElementsWrapper>
-        </Styled.Grid>
+          <div className={styles.chatWrapper}>
+            <div className={styles.cardChat}>
+              {settings.roomId && <Chat />}
+            </div>
+            <div>
+              {/* {isLocalPlayerDrawing && settings.roomId && <DrawingControls />}*/}
+            </div>
+          </div>
+        </div>
       </RoomContext.Provider>
-    </Styled.Wrapper>
+    </div>
   );
 };

@@ -22,7 +22,7 @@ class socket {
   }
 
   removeAllListeners() {
-    return;
+
   }
 }
 

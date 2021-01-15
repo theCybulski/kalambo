@@ -1,0 +1,12 @@
+@import 'shared/styles/index.scss';
+
+.wrapper {
+  position: relative;
+  background-color: $purple;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 15px;
+  cursor: pointer;
+  align-items: center;
+}

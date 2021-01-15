@@ -1,0 +1,58 @@
+@import 'shared/styles/index';
+
+.wrapper {
+  position: relative;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    .icon,
+    .label {
+      opacity: 1
+    }
+  }
+
+  &.isActive {
+    .icon {
+      opacity: 1;
+      background-color: rgba($orange, 1);
+    }
+
+    .label {
+      opacity: 1;
+    }
+  }
+
+
+  .label {
+    margin-left: 10px;
+    opacity: 0.6;
+  }
+
+  .icon {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 30px;
+    mask-size: contain;
+    background-color: rgba($black, 1);
+    opacity: 0.5;
+    transition: opacity 0.2s ease-out;
+
+    &.brush {
+      mask-image: url('./assets/icon-brush.svg');
+    }
+
+    &.eraser {
+      mask-image: url('./assets/icon-eraser.svg');
+    }
+
+    &.clear {
+      mask-image: url('./assets/icon-clear.svg');
+    }
+  }
+}

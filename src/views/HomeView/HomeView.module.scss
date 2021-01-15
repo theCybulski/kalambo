@@ -1,0 +1,14 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+
+  .formsWrapper {
+    width: 300px;
+
+    .formCreate {
+      margin-bottom: 50px;
+    }
+  }
+}

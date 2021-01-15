@@ -1,24 +1,14 @@
-import React from "react";
-import { ThemeProvider } from "styled-components";
+import React from 'react';
 
-import defaultTheme from "shared/styles/defaultTheme";
-import lightTheme from "shared/styles/lightTheme";
-import GlobalStyles from "shared/styles/globalStyles";
-
-import RootRouter from "views/Root/RootRouter";
-import { Router } from "react-router-dom";
-import { createBrowserHistory } from "history";
+import RootRouter from 'views/Root/RootRouter';
+import { Router } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
 
 const history = createBrowserHistory();
-const Root: React.FC = () => {
-  return (
-    <ThemeProvider theme={{ ...defaultTheme, ...lightTheme }}>
-      <Router history={history}>
-        <RootRouter/>
-      </Router>
-      <GlobalStyles/>
-    </ThemeProvider>
-  );
-};
+const Root = () => (
+  <Router history={history}>
+    <RootRouter />
+  </Router>
+);
 
 export default Root;

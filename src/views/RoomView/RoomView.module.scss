@@ -1,0 +1,44 @@
+@import "shared/styles/index";
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  background-color: $blue-light;
+  height: 100vh;
+  padding: 25px 50px 40px;
+
+  .grid {
+    flex: 1;
+    display: grid;
+    grid-gap: 20px;
+    grid-template-columns: repeat(12, 1fr);
+
+    .flipChartWrapper {
+      grid-column-start: 1;
+      grid-column-end: 9;
+
+      .cardFlipChart {
+        background-color: #fff;
+        box-shadow: $shadow-primary;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+        border-radius: 10px 20px 20px 10px;
+      }
+    }
+
+    .chatWrapper {
+      grid-column-start: 9;
+      grid-column-end: 13;
+
+      .cardChat {
+        background-color: #fff;
+        box-shadow: $shadow-primary;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+        border-radius: 20px 10px 20px 20px;
+      }
+    }
+  }
+}
