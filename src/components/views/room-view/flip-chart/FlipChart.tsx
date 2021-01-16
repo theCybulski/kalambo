@@ -10,6 +10,7 @@ import { RoomContext } from 'views/RoomView/RoomContext';
 import { wsEvents } from 'shared/constants/wsEvents';
 
 import styles from './FlipChart.module.scss';
+import { Cursor } from './components/cursor/Cursor';
 
 export type FlipChartTypes = {};
 
@@ -186,6 +187,7 @@ export const FlipChart = () => {
   return (
     isLocalPlayerDrawing ? (
       <div className={styles.stageWrapper} ref={stageWrapper}>
+        <Cursor toolSize={strokeWidth} color={strokeColor} cursorArea={stageWrapper} />
         <Stage ref={stage} width={flipChartSize.width} height={flipChartSize.height}>
           <Layer ref={layer}>
             <Image
