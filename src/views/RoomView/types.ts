@@ -1,3 +1,6 @@
+import { CATEGORIES } from '../../shared/constants/keywords/categories';
+import { COMPLEXITY } from '../../shared/constants/keywords/complexity';
+
 export type RoomSettings = {
   roomId: string;
   adminId: string;
@@ -15,7 +18,7 @@ export type RoomRound = {
   isOn: boolean;
   roundNo: number;
   drawingPlayerId: string;
-  keyword: string;
+  keyword: Keyword;
   startedAt: Date;
   length: number;
 };
@@ -24,4 +27,10 @@ export type DrawingControls = {
   mode: string;
   strokeWidth: number;
   strokeColor: string;
+}
+
+export type Keyword = {
+  category: CATEGORIES;
+  complexity: COMPLEXITY;
+  keyword: string;
 }

@@ -33,7 +33,7 @@ export const DrawingControls = () => {
     <>
       <div className={styles.topBar}>
         <div className={styles.keyword}>
-          Draw: <span data-cy="keyword">{keyword || 'lorem ipsum dolor sit amet consectetur'}</span>
+          {keyword.category.toUpperCase()}: <span data-cy="keyword">{keyword.keyword}</span>
         </div>
 
         <div className={styles.tools}>
