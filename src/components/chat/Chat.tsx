@@ -16,7 +16,7 @@ export const Chat: React.FC = () => {
   } = useContext(RoomContext);
   const [messages, setMessages] = useState([]);
 
-  const sendMessage = useCallback(
+  const handleSendMessage = useCallback(
     (data) => {
       const { message } = data;
 
@@ -65,7 +65,7 @@ export const Chat: React.FC = () => {
         })}
       </div>
       <div className={styles.inputContainer}>
-        <Form onSubmit={sendMessage} resetOnSubmit dataCy="form-message">
+        <Form onSubmit={handleSendMessage} resetOnSubmit dataCy="form-message">
           <Input
             name="message"
             placeholder="Aa"

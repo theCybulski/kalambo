@@ -59,10 +59,10 @@ export const RoomView = () => {
   }, []);
 
   useEffect(() => {
-    // roomSocket.on(wsEvents.toClient.serverError, (err) => {
-    //   console.log(err);
-    //   if (err.code === 404) history.push('/');
-    // });
+    roomSocket.on(wsEvents.toClient.serverError, (err) => {
+      console.log(err);
+      if (err.code === 404) history.push('/');
+    });
 
     roomSocket.on(wsEvents.toClient.joinedRoom, (data) => {
       setLocalPlayer(data.player);
@@ -101,14 +101,6 @@ export const RoomView = () => {
     <div className={styles.wrapper}>
       <RoomContext.Provider value={contextValue}>
         <TopBar />
-        {/* Players in room:*/}
-        {/* <ul>*/}
-        {/*  {players && players.map(player => <li key={player.id}>{player.name}</li>)}*/}
-        {/* </ul>*/}
-        {/* <br/>*/}
-        {/* Keyword: {round.keyword}<br/>*/}
-        {/* isOn: {JSON.stringify(round.isOn)}<br/>*/}
-        {/* <br/>*/}
         <div className={styles.grid}>
           <div className={styles.flipChartWrapper}>
             <div className={styles.cardFlipChart}>

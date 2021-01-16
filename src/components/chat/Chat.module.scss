@@ -1,12 +1,14 @@
 .wrapper {
   height: 100%;
+  display: flex;
+  flex-direction: column;
 
   .messagesContainer {
     flex: 1;
     flex-shrink: 0;
     overflow: auto;
     padding: 10px 10px 0;
-    height: calc(100% - 65px);
+    max-height: calc(100vh - 189px)
   }
 
   .inputContainer {
