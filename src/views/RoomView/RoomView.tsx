@@ -7,8 +7,8 @@ import { API_BASE_ENDPOINT } from 'shared/config/config';
 import { useSearchParams } from 'utils/use-search-params';
 import { wsEvents } from 'shared/constants/wsEvents';
 import { TopBar } from 'components/top-bar/TopBar';
-import { FlipChart } from 'components/flip-chart/FlipChart';
-import { DrawingControls } from 'components/flip-chart/DrawingControls';
+import { FlipChart } from 'components/views/room-view/flip-chart/FlipChart';
+import { DrawingControls } from 'components/views/room-view/drawing-controls/DrawingControls';
 
 import { DrawingControls as DrawingControlsType, Player, RoomRound, RoomSettings } from './types';
 import { RoomContext, defaultValues } from './RoomContext';
@@ -104,6 +104,7 @@ export const RoomView = () => {
         <div className={styles.grid}>
           <div className={styles.flipChartWrapper}>
             <div className={styles.cardFlipChart}>
+              {isLocalPlayerDrawing && settings.roomId && <DrawingControls />}
               {settings.roomId && <FlipChart />}
             </div>
           </div>
@@ -111,9 +112,6 @@ export const RoomView = () => {
           <div className={styles.chatWrapper}>
             <div className={styles.cardChat}>
               {settings.roomId && <Chat />}
-            </div>
-            <div>
-              {/* {isLocalPlayerDrawing && settings.roomId && <DrawingControls />}*/}
             </div>
           </div>
         </div>

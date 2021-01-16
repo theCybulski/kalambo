@@ -18,6 +18,7 @@
       grid-column-end: 9;
 
       .cardFlipChart {
+        position: relative;
         background-color: #fff;
         box-shadow: $shadow-primary;
         overflow: hidden;

@@ -1,0 +1,55 @@
+@import "shared/styles/index";
+
+.topBar {
+  position: absolute;
+  z-index: 9;
+  height: 45px;
+  display: flex;
+  top: 5px;
+  right: 5px;
+  left: 5px;
+  background: rgba($black, 0.05);
+  justify-content: space-between;
+  padding: 0 10px;
+  align-items: center;
+  border-radius: 15px;
+
+  .keyword {
+    color: rgba($black, 0.7);
+    font-size: $font-size-20;
+    font-weight: $font-weight-bold;
+    pointer-events: none;
+  }
+
+  .tools {
+    display: flex;
+    align-items: center;
+
+    .sizeInput {
+      margin-right: 15px;
+    }
+
+    .btnTool {
+      margin-right: 15px;
+
+      &:last-of-type {
+        margin-right: 0;
+      }
+    }
+  }
+}
+
+.leftBar {
+  position: absolute;
+  z-index: 9;
+  right: 5px;
+  top: 55px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 45px;
+  border-radius: 15px;
+  background: rgba($black, 0.05);
+  overflow: hidden;
+  padding: 10px 0;
+}
